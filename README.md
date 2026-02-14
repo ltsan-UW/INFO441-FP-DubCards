@@ -1,4 +1,7 @@
-## Project Description \- GROUP 3
+# Group 3 - Project Proposal
+By: Diego Licea, Lance Santos, Josh Lee, Ryan Hoang
+
+## Project Description
 
 ### Who is our target audience?
 
