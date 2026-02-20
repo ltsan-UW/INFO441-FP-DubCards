@@ -1,9 +1,9 @@
 import express from 'express';
 var router = express.Router();
 
-import cardsRouter from './controllers/cards.js';
-import packsRouter from './controllers/packs.js';
-import userRouter from './controllers/user.js';
+import cardsRouter from './routes/cards.routes.js';
+import packsRouter from './routes/packs.routes.js';
+import userRouter from './routes/user.routes.js';
 
 router.use('/cards', cardsRouter);
 router.use('/packs', packsRouter);
