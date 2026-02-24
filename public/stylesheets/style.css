@@ -78,7 +78,7 @@ a {
   width:70%;
 }
 
-.maincontent {
+#maincontent {
   flex-basis:90%;
   min-width:92%;
   flex-grow:0;

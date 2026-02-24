@@ -3,9 +3,10 @@
 <head>
   <title>Express</title>
   <link rel="stylesheet" href="stylesheets/style.css">
+  <script src="javascripts/index.js"></script>
 </head>
 
-<body onload="init()">
+<body>
   <header>
     <nav class="navbar">
       <h1 class="title">DubCards!</h1>
@@ -21,22 +22,14 @@
   <div class="flex-container">
 
     <aside class="sidebar">
-      <button class="side-button">button1</button>
-      <button class="side-button">button1</button>
-      <button class="side-button">button1</button>
-      <button class="side-button">button1</button>
+      <button class="side-button" onclick="loadStore()">Pack Store</button>
+      <button class="side-button">Inventory</button>
+      <button class="side-button">Trades</button>
+      <button class="side-button">Account</button>
     </aside>
 
-    <div class="mainContent">
-      <div class="store">
-        <h2>Store!</h2>
-        <div class="packs">
-          <div class="cardPack" id="pack1">
-            <strong>Dubs Anniversary Pack</strong>
-            <button>buy</button>
-          </div>
-        </div>
-      </div>
+    <div id="mainContent">
+      <!-- main content div generated here -->
     </div>
 
   </div>
