@@ -54,8 +54,8 @@ POST /user/:id/favorites \- Allows users to add cards to their favorites list.
 POST /user/trade \- Allows users to send or edit trade requests to another user.
 
 GET /store/packs/ \- Allows users to see all the available packs.
-GET /store/packs/:set \- Allows users see details on a specific pack.
-POST /store/packs/:set \- Allows users to open a specific pack and add obtained cards to their user in the db, using their currency.
+GET /store/packs/:packID \- Allows users see details on a specific pack.
+POST /store/packs/:packID \- Allows users to open a specific pack and add obtained cards to their user in the db, using their currency.
 
 GET /cards/ \- Allows users to see cards; query filtered on set and/or cardID.
 

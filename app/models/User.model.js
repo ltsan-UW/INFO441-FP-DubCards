@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   inventory: [
     {
-      cardID: { type: Number, required: true },
+      cardID: { type: mongoose.ObjectId, required: true },
       quantity: { type: Number, default: 1 },
     },
   ],

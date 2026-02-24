@@ -9,21 +9,22 @@ import mongoose from 'mongoose';
 //   setName: { type: String, required: true },
 // });
 
-const setSchema = new mongoose.Schema({
+const packSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
   price: { type: Number, required: true },
-  cards: { type: [Number], default: [], required: true},
-  rarities: [
-    {
-      rarity: {
-        type: String,
-        enum: ['Common', 'Uncommon', 'Rare', 'Ultra Rare', 'Legendary'],
-        required: true,
-      },
-      weight: { type: Number, required: true } // probability weight, total should add to 100.
-    }
-  ],
+  cards: { type: [Number], default: [], required: true },
+  rarities: {
+    type: Map, of: Number,
+    default: {
+      "Common": 60,
+      "Uncommon": 20,
+      "Rare": 12,
+      "Ultra Rare": 6,
+      "Legendary": 2
+    },
+    required: true
+  }
 });
 
-export default mongoose.model('Set', setSchema);
+export default mongoose.model('Pack', setSchema);

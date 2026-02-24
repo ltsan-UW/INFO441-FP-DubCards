@@ -22,8 +22,8 @@ const cardSchema = new mongoose.Schema({
     enum: ['Common', 'Uncommon', 'Rare', 'Ultra Rare', 'Legendary'],
     required: true,
   },
-  setID: { type: mongoose.ObjectId, required: true },
-  setName: { type: String, required: true },
+  packID: { type: mongoose.ObjectId, required: true },
+  packName: { type: String, required: true },
 });
 
 export default mongoose.model('Card', cardSchema);

@@ -1,6 +1,19 @@
 // GET /user/:id - Allows users to see their information; what cards they have, their trade requests and their favorites list.
 export function getUser(req, res) {
-  res.send("To-do endpoint");
+  // to-do db connect
+  const testData = {
+      userID: 1,
+      username: "test-user-one",
+      email: "test@email.com",
+      currency: 999,
+      createdAt: Date.now(),
+      inventory: [
+        {cardID: new mongoose.Types.ObjectId(), quantity: 2},
+        {cardID: new mongoose.Types.ObjectId(), quantity: 1},
+      ],
+      favorites: [1],
+  }
+  res.send(testData);
 }
 
 // POST /user/:id/cards - Allows users to sell cards that they have.
