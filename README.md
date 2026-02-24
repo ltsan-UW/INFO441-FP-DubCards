@@ -43,8 +43,11 @@ Imagine sitting in a lecture some day, and your friend nearby pulls a ultra rare
 
 ### Endpoints
 
-GET /user/login \- Allows users to log into their account.
-POST /user/register \- Allows users to create a new account.
+GET /auth/signin \- Allows users to log into their account.
+GET /auth/signout \- Allows users to log out of their account.
+POST /auth/register \- Allows users to create a new account.
+
+
 GET /user/:id \- Allows users to see their information; what cards they have, their trade requests and their favorites list.
 POST /user/:id/cards \- Allows users to sell cards that they have.
 POST /user/:id/favorites \- Allows users to add cards to their favorites list.

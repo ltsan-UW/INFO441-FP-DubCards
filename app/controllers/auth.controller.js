@@ -1,10 +1,5 @@
-// POST /auth/login
-export function login(req, res) {
-    res.send("To-do endpoint");
-}
-
-// GET /auth/signUp
-export function signUp(req, res) {
+// GET /auth/register
+export function register(req, res) {
     res.send("To-do endpoint");
 }
 
