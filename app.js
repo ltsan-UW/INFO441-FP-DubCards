@@ -3,14 +3,14 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
-import apiRouter from './app/api'
-import authRouter from './app/routes/auth.routes'
+import apiRouter from './app/api.js'
+import authRouter from './app/routes/auth.routes.js'
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 import 'dotenv/config';
-import { connectDB } from './config/db.js';
+import { connectDB } from './app/config/db.js';
 
 connectDB();
 

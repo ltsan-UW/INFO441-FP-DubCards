@@ -1,23 +1,23 @@
 // POST /auth/login
-exports.login = (req, res) => {
+export function login(req, res) {
     res.send("To-do endpoint");
-};
+}
 
 // GET /auth/signUp
-exports.signUp = (req, res) => {
+export function signUp(req, res) {
     res.send("To-do endpoint");
-};
+}
 
 // GET /auth/signin
-exports.signIn = (req, res, next) => {
+export function signIn(req, res, next) {
     return req.authContext.login({
         postLoginRedirectUri: "/",
     })(req, res, next);
-};
+}
 
 // GET /auth/signout
-exports.signOut = (req, res, next) => {
+export function signOut(req, res, next) {
     return req.authContext.logout({
         postLogoutRedirectUri: "/",
     })(req, res, next);
-};
+}
