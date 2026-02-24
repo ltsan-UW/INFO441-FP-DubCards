@@ -1,7 +1,20 @@
 import mongoose from 'mongoose';
 
+// const cardSchema = new mongoose.Schema({
+//   cardID: { type: Number, required: true, unique: true },
+//   name: { type: String, required: true },
+//   description: { type: String },
+//   rarity: {
+//     type: String,
+//     enum: ['Common', 'Uncommon', 'Rare', 'Ultra Rare', 'Legendary'],
+//     required: true,
+//   },
+//   cardType: { type: String, required: true },
+//   setID: { type: Number, required: true },
+//   setName: { type: String, required: true },
+// });
+
 const cardSchema = new mongoose.Schema({
-  cardID: { type: Number, required: true, unique: true },
   name: { type: String, required: true },
   description: { type: String },
   rarity: {
@@ -9,8 +22,7 @@ const cardSchema = new mongoose.Schema({
     enum: ['Common', 'Uncommon', 'Rare', 'Ultra Rare', 'Legendary'],
     required: true,
   },
-  cardType: { type: String, required: true },
-  setID: { type: Number, required: true },
+  setID: { type: mongoose.ObjectId, required: true },
   setName: { type: String, required: true },
 });
 

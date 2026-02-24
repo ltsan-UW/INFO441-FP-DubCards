@@ -13,11 +13,7 @@ const userSchema = new mongoose.Schema({
       quantity: { type: Number, default: 1 },
     },
   ],
-  favorites: [
-    {
-      cardID: { type: Number, required: true },
-    },
-  ],
+  favorites: { type: [Number], default: []}
 });
 
 export default mongoose.model('User', userSchema);
