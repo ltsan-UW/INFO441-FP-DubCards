@@ -15,7 +15,7 @@ The goal would be for the audience to use our site as a fun, low stress game tha
 
 We wanted to create a simple entertainment platform in the form of a TCG that catered to UW students.
 
-We as devs want to build this site because of the popularity of similar TCG type games. We think that this is a format that many in our audience are familiar with, so making our own version with UW cards would be a fun, lightweight way to enhance the UW experience. 
+We as devs want to build this site because of the popularity of similar TCG type games. We think that this is a format that many in our audience are familiar with, so making our own version with UW cards would be a fun, lightweight way to enhance the UW experience.
 
 Imagine sitting in a lecture some day, and your friend nearby pulls a ultra rare Dubs II 2018 National Puppy Day Card. And then you buy the same pack and unfortunately you draw a common campus squirrel card. That’s the kind of thing that we are envisioning with this platform (at least for a fully-fledged version).
 
@@ -43,48 +43,51 @@ Imagine sitting in a lecture some day, and your friend nearby pulls a ultra rare
 
 ### Endpoints
 
-GET /user/login \- Allows users to log into their account.  
-POST /user/register \- Allows users to create a new account.  
-GET /user/:id \- Allows users to see their information; what cards they have, their trade requests and their favorites list.  
-POST /user/:id/cards \- Allows users to sell cards that they have.  
-POST /user/:id/favorites \- Allows users to add cards to their favorites list.  
+GET /user/login \- Allows users to log into their account.
+POST /user/register \- Allows users to create a new account.
+GET /user/:id \- Allows users to see their information; what cards they have, their trade requests and their favorites list.
+POST /user/:id/cards \- Allows users to sell cards that they have.
+POST /user/:id/favorites \- Allows users to add cards to their favorites list.
 POST /user/trade \- Allows users to send or edit trade requests to another user.
 
-POST /packs/:set \- Allows users to open a specific pack and add obtained cards to their user in the db, using their currency.  
+GET /store/packs/ \- Allows users to see all the available packs.
+GET /store/packs/:set \- Allows users see details on a specific pack.
+POST /store/packs/:set \- Allows users to open a specific pack and add obtained cards to their user in the db, using their currency.
+
 GET /cards/ \- Allows users to see cards; query filtered on set and/or cardID.
 
 ### Database Schema
 
-* Users:  
-  * userID: number  
-  * username: String  
-  * email: String  
-  * createdAt: Date  
-  * Inventory:  
-    * cardID:number  
-    * Quantitynumber  
-  * Favories:  
-    * cardID:number  
-* Card  
-  * cardID: number  
-  * name: String  
-  * description: String  
-  * rarity: String  
-  * cardType: String  
-  * setID: number  
-  * setName: String  
-* Pack:  
-  * packID: ObjectId,  
-  * name: String  
-  * description: String  
-  * price: Number  
-  * setID: number  
-  * setName: String  
-* Trade  
-  * tradeID: number  
-  * senderUserId: number  
-  * receiverUserId: number  
-  * senderCards  
+* Users:
+  * userID: number
+  * username: String
+  * email: String
+  * createdAt: Date
+  * Inventory:
+    * cardID:number
+    * Quantitynumber
+  * Favories:
+    * cardID:number
+* Card
+  * cardID: number
+  * name: String
+  * description: String
+  * rarity: String
+  * cardType: String
+  * setID: number
+  * setName: String
+* Pack:
+  * packID: ObjectId,
+  * name: String
+  * description: String
+  * price: Number
+  * setID: number
+  * setName: String
+* Trade
+  * tradeID: number
+  * senderUserId: number
+  * receiverUserId: number
+  * senderCards
   * receiverCards
- 
+
 
