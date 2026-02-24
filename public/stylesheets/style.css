@@ -85,3 +85,24 @@ a {
   flex-shrink:0;
   background-color: #2A112E;
 }
+
+.packs {
+  display:flex;
+  margin-left:10px;
+}
+
+.store h2 {
+  font-size:30px;
+  color:white;
+  margin-left:10px;
+}
+
+.cardPack {
+  font-size:20px;
+  height:200px;
+  width:180px;
+  justify-content: center;
+  align-items:center;
+  text-align: center;
+  background-color: white;
+}
