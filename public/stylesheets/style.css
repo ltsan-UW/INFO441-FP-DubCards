@@ -62,8 +62,7 @@ a {
 }
 
 .sidebar {
-  flex-basis:10%;
-  max-width: 8%;
+  flex-basis: 120px;
   text-align: center;
   background-color: #341539;
   flex-grow:0;
@@ -72,16 +71,14 @@ a {
 }
 
 .side-button {
-  font-size:20px;
+  font-size:19px;
   height:6rem;
   margin-top:40px;
   width:70%;
 }
 
 #maincontent {
-  flex-basis:90%;
-  min-width:92%;
-  flex-grow:0;
+  flex-grow: 1;
   flex-shrink:0;
   background-color: #2A112E;
 }
@@ -105,4 +102,5 @@ a {
   align-items:center;
   text-align: center;
   background-color: white;
+  margin: 10px
 }
