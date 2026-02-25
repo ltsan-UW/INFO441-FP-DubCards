@@ -10,7 +10,7 @@ export function getPacks(req, res) {
   res.send(testData);
 }
 
-// GET /store/packs/:set \- Allows users see details on a specific pack.
+// GET /store/packs/:packID \- Allows users see details on a specific pack.
 export function getPack(req, res) {
   // to-do db connect
   const testData = {

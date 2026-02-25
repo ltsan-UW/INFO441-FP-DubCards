@@ -12,7 +12,7 @@ function createPack(packData){
       <div class="cardPack" id="${packData.packID}">
         <strong>${packData.name}</strong>
         <p>Price: ${packData.price}</p>
-        <button>buy</button>
+        <button onclick="loadPack('${packData.packID}')">more</button>
       </div>
     `
 }
