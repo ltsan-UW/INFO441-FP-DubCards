@@ -108,3 +108,33 @@ a {
 .packPage {
   background-color: aliceblue;
 }
+
+.inventory h2 {
+  font-size:30px;
+  color:white;
+  margin-left:10px;
+}
+
+.card {
+  font-size:20px;
+  height:224px;
+  width:160px;
+  justify-content: center;
+  align-items:center;
+  text-align: center;
+  background: linear-gradient(
+  135deg, 
+  #1e3c72,  
+  #2a5298,   
+  #00c6ff,   
+  #00ff9d    
+  );
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  margin: 10px;
+}
+
+.invCards {
+  display:flex;
+  margin-left:10px;
+}

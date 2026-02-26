@@ -90,7 +90,7 @@ async function loadInventory() {
     let inventoryHTML = `
         <div class="inventory">
             <h2>Your Inventory:</h2>
-            <div class="cards">
+            <div class="invCards">
             ${cardsHTML}
             </div>
         </div>
