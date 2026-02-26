@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/9a9072dd-7c73-438d-801a-7f2c815c090b/resourceGroups/appsvc_linux_westus32/providers/Microsoft.Web/sites/DubCards",
+  "appService.deploySubpath": "."
+}

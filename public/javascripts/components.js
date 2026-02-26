@@ -3,9 +3,9 @@ async function createCard(cardData){
     return `
     <div class="card rarity_${cardData.rarity}">
         <h2>${cardData.name}</h2>
-        <img href="./images/${cardData.cardID}">
     </div> `
 }
+// <img href="./images/${cardData.cardID}"></img>
 
 function createPack(packData){
     return `

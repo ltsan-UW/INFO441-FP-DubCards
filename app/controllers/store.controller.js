@@ -30,7 +30,7 @@ export function getPack(req, res) {
   res.send(testData);
 }
 
-// POST /store/packs/:set \- Allows users to open a specific pack and add obtained cards to their user in the db, using their currency.
+// POST /store/packs/:packID \- Allows users to open a specific pack and add obtained cards to their user in the db, using their currency.
 export function openPack(req, res) {
   const testData = [
     {
