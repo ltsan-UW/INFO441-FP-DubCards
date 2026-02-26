@@ -1,98 +1,107 @@
 async function init() {
-  console.log("loading dubcards frontend...");
-  loadInventory(); //for now. should load based on buttons later
-  return;
+    console.log("loading dubcards frontend...");
+    loadInventory(); //for now. should load based on buttons later
+    return;
 }
 
 async function loadStore() {
-  const storeJson = await fetchJSON(`api/store/packs`)
-  const packs = await Promise.all(
-    storeJson.map(pack => createPack(pack))
-  );
-  let packsHTML = packs.join("");
+    const storeJson = await fetchJSON(`api/store/packs`)
+    const packs = await Promise.all(
+        storeJson.map(pack => createPack(pack))
+    );
+    let packsHTML = packs.join("");
 
-  let storeHTML = `
-      <div class="store">
-        <h2>Store!</h2>
-        <div class="packs">
-          ${packsHTML}
+    let storeHTML = `
+        <div class="store">
+            <h2>Store!</h2>
+            <div class="packs">
+            ${packsHTML}
+            </div>
         </div>
-      </div>
-        `
-  document.getElementById("mainContent").innerHTML = storeHTML;
-  return;
+            `
+    document.getElementById("mainContent").innerHTML = storeHTML;
+    return;
 }
 
 async function loadPack(packID) {
-  const packJSON = await fetchJSON(`api/store/packs/` + packID)
-  let packHTML = `
-  <div class="packPage">
-    <button onclick="loadStore()">back</button>
-    <h2>${packJSON.name}</h2>
-    <p><strong>Description:</strong> ${packJSON.description}</p>
-    <p><strong>Price:</strong> $${packJSON.price}</p>
-    <p><strong>Pack ID:</strong> ${packJSON.packID}</p>
+    const packJSON = await fetchJSON(`api/store/packs/` + packID)
+    let packHTML = `
+    <div class="packPage">
+        <button onclick="loadStore()">back</button>
+        <h2>${packJSON.name}</h2>
+        <p><strong>Description:</strong> ${packJSON.description}</p>
+        <p><strong>Price:</strong> $${packJSON.price}</p>
+        <p><strong>Pack ID:</strong> ${packJSON.packID}</p>
 
-    <h3>Cards</h3>
-    <ul>
-      ${packJSON.cards.map(card => `<li>Card Name: ${card}</li>`).join("")}
-    </ul>
-    <h3>Rarities</h3>
-    <ul>
-      ${Object.entries(packJSON.rarities)
-      .map(([rarity, weight]) => `<li>${rarity}: ${weight}%</li>`)
-      .join("")}
-    </ul>
-    <button onclick="openPack('${packJSON.packID}', '${packJSON.name}')">buy</button>
-  </div>
-`;
-  document.getElementById("mainContent").innerHTML = packHTML;
+        <h3>Cards</h3>
+        <ul>
+        ${packJSON.cards.map(card => `<li>Card Name: ${card}</li>`).join("")}
+        </ul>
+        <h3>Rarities</h3>
+        <ul>
+        ${Object.entries(packJSON.rarities)
+        .map(([rarity, weight]) => `<li>${rarity}: ${weight}%</li>`)
+        .join("")}
+        </ul>
+        <button onclick="openPack('${packJSON.packID}', '${packJSON.name}')">buy</button>
+    </div>
+    `;
+    document.getElementById("mainContent").innerHTML = packHTML;
 }
 
 async function openPack(packID, packName) {
-  try {
-    const cardsJSON = await fetchJSON(`api/store/packs/` + packID, {
-      method: "POST",
-      body: {}
-    })
-  const cards = await Promise.all(
-    cardsJSON.map(card => createCard(card))
-  );
+    try {
+        const cardsJSON = await fetchJSON(`api/store/packs/` + packID, {
+        method: "POST",
+        body: {}
+        })
+    const cards = await Promise.all(
+        cardsJSON.map(card => createCard(card))
+    );
 
-  let cardsHTML = `
-    <div class="packCardsPage">
-      <h2>Cards received from ${packName}:</h2>
-      ${cards.join("")}
-      <button onclick="loadStore()">next</button>
-    </div>
-  `;
-    document.getElementById("mainContent").innerHTML = cardsHTML;
-  } catch (error) {
-    throw (error)
-  }
+    let cardsHTML = `
+        <div class="packCardsPage">
+        <h2>Cards received from ${packName}:</h2>
+        ${cards.join("")}
+        <button onclick="loadStore()">next</button>
+        </div>
+    `;
+        document.getElementById("mainContent").innerHTML = cardsHTML;
+    } catch (error) {
+        throw (error)
+    }
 }
 
 async function loadInventory() {
-  const cardsJson = await fetchJSON(`api/store/cards`)
-  const cards = await Promise.all(
-    cardsJson.map(card => createCard(card))
-  );
-  let cardsHTML = cards.join("");
+    const uid = 1;
+    const userInfoJson = await fetchJSON(`api/user/${uid}`);
 
-  let inventoryHTML = `
-      <div class="inventory">
-        <h2>Your Inventory:</h2>
-        <div class="cards">
-          ${cardsHTML}
+    console.log("Loading inventory...");
+    const cardsArray = userInfoJson.inventory;
+    console.log(cardsArray);
+    const cards = await Promise.all(
+        cardsArray.map(card => createCard(card))
+    );
+
+    console.log(cards);
+
+    let cardsHTML = cards.join("");
+
+    let inventoryHTML = `
+        <div class="inventory">
+            <h2>Your Inventory:</h2>
+            <div class="cards">
+            ${cardsHTML}
+            </div>
         </div>
-      </div>
-        `
-  document.getElementById("mainContent").innerHTML = storeHTML;
-  return;
+            `
+    document.getElementById("mainContent").innerHTML = inventoryHTML;
+    return;
 }
 
+
 async function clickLogin() {
-  console.log("You clicked logged in!")
+    console.log("You clicked logged in!")
 }
 async function clickSignUo() {
   console.log("You clicked sign up!")

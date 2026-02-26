@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 // GET /user/:id - Allows users to see their information; what cards they have, their trade requests and their favorites list.
 export function getUser(req, res) {
   // to-do db connect
@@ -8,8 +10,8 @@ export function getUser(req, res) {
       currency: 999,
       createdAt: Date.now(),
       inventory: [
-        {cardID: new mongoose.Types.ObjectId(), quantity: 2},
-        {cardID: new mongoose.Types.ObjectId(), quantity: 1},
+        {cardID: new mongoose.Types.ObjectId(), name: "Dubs I Legacy Edition", quantity: 2},
+        {cardID: new mongoose.Types.ObjectId(), name: "2018 NPD Dubs II", quantity: 1},
       ],
       favorites: [1],
   }
