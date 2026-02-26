@@ -1,6 +1,6 @@
 async function init() {
   console.log("loading dubcards frontend...");
-  loadStore(); //for now. should load based on buttons later
+  loadInventory(); //for now. should load based on buttons later
   return;
 }
 
@@ -73,7 +73,22 @@ async function openPack(packID, packName) {
 }
 
 async function loadInventory() {
+  const cardsJson = await fetchJSON(`api/store/cards`)
+  const cards = await Promise.all(
+    cardsJson.map(card => createCard(card))
+  );
+  let cardsHTML = cards.join("");
 
+  let inventoryHTML = `
+      <div class="inventory">
+        <h2>Your Inventory:</h2>
+        <div class="cards">
+          ${cardsHTML}
+        </div>
+      </div>
+        `
+  document.getElementById("mainContent").innerHTML = storeHTML;
+  return;
 }
 
 async function clickLogin() {
