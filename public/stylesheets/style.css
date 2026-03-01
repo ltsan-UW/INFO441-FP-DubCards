@@ -117,8 +117,8 @@ a {
 
 .card {
   font-size:20px;
-  height:224px;
-  width:160px;
+  width: 240px;
+  height: 336px;
   justify-content: center;
   align-items:center;
   text-align: center;
