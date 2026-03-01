@@ -96,6 +96,16 @@ async function loadInventory() {
         </div>
             `
     document.getElementById("mainContent").innerHTML = inventoryHTML;
+
+    // Load function for everythung under the invCards div! 
+    const newCards = document.querySelectorAll(".invCards .card");
+    VanillaTilt.init(newCards, {
+        max: 20,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.4,
+    });
+
     return;
 }
 

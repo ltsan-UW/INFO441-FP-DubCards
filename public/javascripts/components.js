@@ -1,8 +1,8 @@
 
 async function createCard(cardData){
     return `
-    <div class="card rarity_${cardData.rarity}">
-        <h2>${cardData.name}</h2>
+    <div data-tilt class="card rarity_${cardData.rarity}">
+        <img src="../../local-data/${cardData.imgPath}">
     </div> `
 }
 // <img href="./images/${cardData.cardID}"></img>

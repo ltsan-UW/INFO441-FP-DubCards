@@ -10,8 +10,8 @@ export function getUser(req, res) {
       currency: 999,
       createdAt: Date.now(),
       inventory: [
-        {cardID: new mongoose.Types.ObjectId(), name: "Dubs I Legacy Edition", quantity: 2},
-        {cardID: new mongoose.Types.ObjectId(), name: "2018 NPD Dubs II", quantity: 1},
+        {cardID: new mongoose.Types.ObjectId(), name: "Campus Squirrel", imgPath: "CSquirrel.png", quantity: 1},
+        {cardID: new mongoose.Types.ObjectId(), name: "Campus Squirrel", imgPath: "CSquirrel.png", quantity: 1},
       ],
       favorites: [1],
   }
