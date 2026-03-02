@@ -17,6 +17,7 @@ import mongoose from 'mongoose';
 const cardSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
+  imgPath: { type: String, required: true},
   rarity: {
     type: String,
     enum: ['Common', 'Uncommon', 'Rare', 'Ultra Rare', 'Legendary'],
