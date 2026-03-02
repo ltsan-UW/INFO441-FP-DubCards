@@ -6,17 +6,15 @@
   <script src="javascripts/index.js"></script>
   <script src="javascripts/utils.js"></script>
   <script src="javascripts/components.js"></script>
+  <script src="javascripts/authentication.js"></script>
 </head>
 
-<body>
+<body onload="init()">
   <header>
     <nav class="navbar">
       <h1 class="title">DubCards!</h1>
 
-      <div class="login-signup-div">
-        <button class="account-buttons" onClick="clickLogin()">Login</button>
-        <button class="account-buttons" onClick="clickSignUp()">Sign Up</button>
-        <a href="/auth/signin" role="button">SignIn</a>
+      <div class="login-signup-div" id="login-signup-div">
       </div>
 
     </nav>

@@ -16,3 +16,17 @@ export function signOut(req, res, next) {
         postLogoutRedirectUri: "/",
     })(req, res, next);
 }
+
+// GET /auth/user
+export function getUser(req, res, next) {
+  if (req.authContext?.isAuthenticated()) {
+    const account = req.authContext?.getAccount();
+    res.json({
+      status: "loggedin",
+      userInfo: {
+        name: account.name,
+        username: account.username
+      }
+    });
+  } else res.json({ status: "loggedout" });
+}

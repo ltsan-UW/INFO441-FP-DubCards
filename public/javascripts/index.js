@@ -1,6 +1,8 @@
 async function init() {
     console.log("loading dubcards frontend...");
+    await loadAuth()
     loadInventory(); //for now. should load based on buttons later
+
     return;
 }
 
@@ -97,7 +99,7 @@ async function loadInventory() {
             `
     document.getElementById("mainContent").innerHTML = inventoryHTML;
 
-    // Load function for everythung under the invCards div! 
+    // Load function for everythung under the invCards div!
     const newCards = document.querySelectorAll(".invCards .card");
     VanillaTilt.init(newCards, {
         max: 20,
