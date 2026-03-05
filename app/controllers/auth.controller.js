@@ -15,7 +15,7 @@ export async function callback(req, res) {
         }
         const account = req.authContext.getAccount();
         const username = account.username.split("@")[0];
-        let user = await UserModel.findOne({ username: username });
+        let user = await UserModel.findOne({ email: account.username });
         if (!user) {
             user = new UserModel({
                 username: username,
@@ -51,7 +51,7 @@ export function getUser(req, res, next) {
       status: "loggedin",
       userInfo: {
         name: account.name,
-        username: account.username
+        username: account.username,
       }
     });
   } else res.json({ status: "loggedout" });

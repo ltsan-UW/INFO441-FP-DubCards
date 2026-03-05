@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
 
 const tradeSchema = new mongoose.Schema({
-  tradeID: { type: Number, required: true, unique: true },
-  senderUserID: { type: Number, required: true },
-  receiverUserID: { type: Number, required: true },
-  senderCards: [{ cardID: { type: Number, required: true } }],
-  receiverCards: [{ cardID: { type: Number, required: true } }],
+  senderUsername: { type: String, required: true },
+  receiverUsername: { type: String, required: true },
+  senderCards: { type: [Number], required: true },
+  receiverCards: { type: [Number], required: true },
   status: {
     type: String,
     enum: ['pending', 'accepted', 'rejected', 'cancelled'],

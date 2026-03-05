@@ -64,11 +64,20 @@ async function openPack(packID, packName) {
     let cardsHTML = `
         <div class="packCardsPage">
         <h2>Cards received from ${packName}:</h2>
-        ${cards.join("")}
+        <div id="open-pack-div">${cards.join("")}<div/>
         <button onclick="loadStore()">next</button>
         </div>
     `;
-        document.getElementById("mainContent").innerHTML = cardsHTML;
+    document.getElementById("mainContent").innerHTML = cardsHTML;
+
+
+    const newCards = document.querySelectorAll(".card");
+    VanillaTilt.init(newCards, {
+        max: 20,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.4,
+    });
     } catch (error) {
         throw (error)
     }
@@ -109,12 +118,4 @@ async function loadInventory() {
     });
 
     return;
-}
-
-
-async function clickLogin() {
-    console.log("You clicked logged in!")
-}
-async function clickSignUo() {
-  console.log("You clicked sign up!")
 }

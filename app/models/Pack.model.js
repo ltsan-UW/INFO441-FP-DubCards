@@ -1,19 +1,10 @@
 import mongoose from 'mongoose';
 
-// const packSchema = new mongoose.Schema({
-//   packID: { type: mongoose.Schema.Types.ObjectId, auto: true },
-//   name: { type: String, required: true },
-//   description: { type: String },
-//   price: { type: Number, required: true },
-//   setID: { type: Number, required: true },
-//   setName: { type: String, required: true },
-// });
-
 const packSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
   price: { type: Number, required: true },
-  cards: { type: [Number], default: [], required: true },
+  cards: { type: [Number], default: [] },
   rarities: {
     type: Map, of: Number,
     default: {
@@ -27,4 +18,4 @@ const packSchema = new mongoose.Schema({
   }
 });
 
-export default mongoose.model('Pack', setSchema);
+export default mongoose.model('Pack', packSchema);

@@ -65,6 +65,7 @@ app.get('/error', (req, res) => res.status(500).send('server error'));
 app.get('/unauthorized', (req, res) => res.status(401).send('Permission denied'));
 
 
+
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 
