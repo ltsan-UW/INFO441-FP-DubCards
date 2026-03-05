@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  userID: { type: Number, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String},
   currency: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   inventory: [

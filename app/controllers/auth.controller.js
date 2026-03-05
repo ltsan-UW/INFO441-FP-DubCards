@@ -1,13 +1,39 @@
-// GET /auth/register
-export function register(req, res) {
-    res.send("To-do endpoint");
-}
+import UserModel from "../models/User.model.js";
 
 // GET /auth/signin
 export function signIn(req, res, next) {
     return req.authContext.login({
-        postLoginRedirectUri: "/",
+        postLoginRedirectUri: "/auth/callback",
     })(req, res, next);
+}
+
+// GET /auth/callback
+export async function callback(req, res) {
+    try {
+        if (!req.authContext?.isAuthenticated()) {
+            return res.status(401).send({ status: "error", error: "not logged in" });
+        }
+        const account = req.authContext.getAccount();
+        const username = account.username.split("@")[0];
+        let user = await UserModel.findOne({ username: username });
+        if (!user) {
+            user = new UserModel({
+                username: username,
+                email: account.username,
+                password: "",
+                currency: 0,
+                createdAt: Date.now(),
+                inventory: [],
+                favorites: [],
+            });
+            await user.save();
+            console.log(`Created new user: ${username}`);
+        }
+        res.redirect("/")
+    } catch (error) {
+        console.error("Error connecting to DB:", error);
+        res.status(500).send({ status: "error", error });
+    }
 }
 
 // GET /auth/signout

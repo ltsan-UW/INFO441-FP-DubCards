@@ -15,7 +15,6 @@ import { connectDB } from './app/config/db.js';
 
 import { WebAppAuthProvider } from 'msal-node-wrapper';
 import sessions from 'express-session'
-import { env } from 'process';
 const azure_secret = process.env.AZURE_AUTH_SECRET;
 const azure_client_id = process.env.AZURE_CLIENT_ID;
 const azure_authority_id = process.env.AZURE_AUTHORITY_ID;
