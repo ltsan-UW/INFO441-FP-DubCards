@@ -6,11 +6,11 @@ import * as userController from '../controllers/user.controller.js';
 // GET /user - Allows the logged in user to see their own information; what cards they have, their trade requests and their favorites list.
 router.get('/', userController.getUser);
 
-// GET /user/:id - Allows users to see their information; what cards they have, their trade requests and their favorites list.
-router.get('/:id', userController.getUser);
+// GET /user/:username - Allows users to see their information; what cards they have, their trade requests and their favorites list.
+router.get('/:username', userController.getUser);
 
-// POST /user/cards - Allows users to sell cards that they have.
-router.post('/cards', userController.postCards);
+// POST /user/sell - Allows users to sell cards that they have.
+router.post('/sell', userController.postCards);
 
 // POST /user/favorites - Allows users to add cards to their favorites list.
 router.post('/favorites', userController.postFavorites);

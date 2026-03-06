@@ -4,11 +4,15 @@ import TradeModel from "../models/Trade.model.js";
 // GET /user/:id
 export async function getUser(req, res) {
   try {
-    if (!req.authContext?.isAuthenticated()) {
-      return res.status(401).json({ status: "error", error: "Not logged in" });
-    }
-    const email = req.authContext.getAccount().username;
-    const user = await UserModel.findOne({ email });
+    // if there is a username parameter, use it. If not, then use the user logged in.
+    let user;
+    if (req.params.username === undefined) {
+      if (!req.authContext?.isAuthenticated()) {
+        return res.status(401).json({ status: "error", error: "Not logged in" });
+      }
+      email = req.authContext.getAccount().username;
+      user = await UserModel.findOne({ email });
+    } else user = await UserModel.findOne({ username: req.params.username });
     if (!user) return res.status(404).json({ status: "error", error: "User not found" });
 
     res.json(user);
@@ -73,6 +77,9 @@ export async function postFavorites(req, res) {
 // POST /user/trade - send a trade request
 export async function postTrades(req, res) {
   try {
+    if (!req.authContext?.isAuthenticated()) {
+      return res.status(401).json({ status: "error", error: "Not logged in" });
+    }
     const { receiverUsername, senderCards, receiverCards } = req.body;
     const email = req.authContext.getAccount().username;
     const sender = await UserModel.findOne({ email });
