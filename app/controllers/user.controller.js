@@ -6,15 +6,17 @@ export async function getUser(req, res) {
   try {
     // if there is a username parameter, use it. If not, then use the user logged in.
     let user;
+    console.log(req.params.username)
     if (req.params.username === undefined) {
       if (!req.authContext?.isAuthenticated()) {
         return res.status(401).json({ status: "error", error: "Not logged in" });
       }
-      email = req.authContext.getAccount().username;
-      user = await UserModel.findOne({ email });
+      const email = req.authContext.getAccount().username;
+      user = await UserModel.findOne({ email: email });
     } else user = await UserModel.findOne({ username: req.params.username });
     if (!user) return res.status(404).json({ status: "error", error: "User not found" });
 
+    console.log(user)
     res.json(user);
   } catch (error) {
     res.status(500).json({ status: "error", error });

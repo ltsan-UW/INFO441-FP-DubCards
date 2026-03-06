@@ -15,6 +15,11 @@ async function createCard(cardData, favorites, tilt = true) {
 
   const img = document.createElement("img");
   img.src = `../images/cards/${cardData.cardID}.png`;
+
+  img.onerror = () => {
+    img.onerror = null;
+    img.src = "../images/cards/temp.png";
+  };
   card.appendChild(img);
 
   if (cardData?.quantity) {
@@ -65,10 +70,10 @@ async function createCard(cardData, favorites, tilt = true) {
 
 function createPack(packData) {
   return `
-      <div class="cardPack" id="${packData.packID}">
+      <div class="cardPack" id="pack-${packData._id}">
         <strong>${packData.name}</strong>
         <p>Price: ${packData.price}</p>
-        <button onclick="loadPack('${packData.packID}')">more</button>
+        <button onclick="loadPack('${packData._id}')">more</button>
       </div>
     `
 }

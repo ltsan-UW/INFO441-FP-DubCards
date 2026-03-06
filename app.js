@@ -18,7 +18,7 @@ import sessions from 'express-session'
 const azure_secret = process.env.AZURE_AUTH_SECRET;
 const azure_client_id = process.env.AZURE_CLIENT_ID;
 const azure_authority_id = process.env.AZURE_AUTHORITY_ID;
-const redirect_uri = process.env.REDIRECT_URI;
+const redirect_uri = "/redirect";
 
 connectDB();
 

@@ -8,9 +8,9 @@ async function init() {
 
 async function loadStore() {
     const storeJson = await fetchJSON(`api/store/packs`);
-    const uid = 1;
+    console.log(storeJson)
 
-    const userJson = await fetchJSON(`api/user/${uid}`);
+    const userJson = await fetchJSON(`api/user/`);
 
     let currency = userJson.currency;
 
@@ -45,7 +45,7 @@ async function loadPack(packID) {
         <h2>${packJSON.name}</h2>
         <p><strong>Description:</strong> ${packJSON.description}</p>
         <p><strong>Price:</strong> $${packJSON.price}</p>
-        <p><strong>Pack ID:</strong> ${packJSON.packID}</p>
+        <p><strong>Pack ID:</strong> ${packID}</p>
 
         <h3>Cards</h3>
         <ul>
@@ -57,7 +57,7 @@ async function loadPack(packID) {
             .map(([rarity, weight]) => `<li>${rarity}: ${weight}%</li>`)
             .join("")}
         </ul>
-        <button onclick="openPack('${packJSON.packID}', '${packJSON.name}')">buy</button>
+        <button onclick="openPack('${packID}', '${packJSON.name}')">buy</button>
     </div>
     `;
     document.getElementById("mainContent").innerHTML = packHTML;

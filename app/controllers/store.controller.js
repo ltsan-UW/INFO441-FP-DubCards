@@ -31,8 +31,11 @@ export async function openPack(req, res) {
     if (!pack) return res.status(404).json({ status: "error", error: "Pack not found" });
 
     // get the logged in user via azure auth
+    if (!req.authContext?.isAuthenticated()) {
+      return res.status(401).json({ status: "error", error: "Not logged in" });
+    }
     const email = req.authContext.getAccount().username;
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email: email });
     if (!user) return res.status(404).json({ status: "error", error: "User not found" });
 
     // check user has enough currency
