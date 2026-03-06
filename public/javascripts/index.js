@@ -83,6 +83,7 @@ async function loadInventory() {
     const userInfoJson = await fetchJSON(`api/user/${uid}`);
 
     console.log("Loading inventory...");
+    console.log(userInfoJson)
 
     const inventory = document.createElement("div");
     inventory.classList.add("inventory");
@@ -94,7 +95,7 @@ async function loadInventory() {
     invCards.classList.add("invCards");
     const cardsArray = userInfoJson.inventory;
     const cards = await Promise.all(
-        cardsArray.map(card => createCard(card))
+        cardsArray.map(card => createCard(card, userInfoJson.favorites))
     );
     cards.forEach(card => invCards.appendChild(card));
 

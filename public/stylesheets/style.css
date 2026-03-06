@@ -1,3 +1,4 @@
+
 body {
   padding: 0px;
   margin:0px;
@@ -57,7 +58,7 @@ a {
 
 .flex-container {
   display: flex;
-  height:100%;
+  min-height:100%;
   width:100%;
 }
 
@@ -79,7 +80,6 @@ a {
 
 #maincontent {
   flex-grow: 1;
-  flex-shrink:0;
   background-color: #2A112E;
 }
 
@@ -144,6 +144,22 @@ a {
   font-size: 22px;
   padding: 5px;
   border-radius: 20%;
+  user-select: none;
+  cursor: default;
+}
+
+.card-favorite {
+  position: absolute;
+  top: 80%;
+  left: 9%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.826);
+  font-size: 35px;
+  margin: 0px;
+  padding: 5px;
+  border-radius: 20%;
+  user-select: none;
+  cursor: pointer;
 }
 
 .invCards {
@@ -155,4 +171,5 @@ a {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 }
