@@ -7,7 +7,13 @@ async function init() {
 }
 
 async function loadStore() {
-    const storeJson = await fetchJSON(`api/store/packs`)
+    const storeJson = await fetchJSON(`api/store/packs`);
+    const uid = 1;
+
+    const userJson = await fetchJSON(`api/user/${uid}`);
+
+    let currency = userJson.currency;
+
     const packs = await Promise.all(
         storeJson.map(pack => createPack(pack))
     );
@@ -15,9 +21,15 @@ async function loadStore() {
 
     let storeHTML = `
         <div class="store">
-            <h2>Store!</h2>
+            <div class="storeTitle">
+                <h2>Pack Store!</h2>
+                <div class="currency">
+                <p>${currency}</p>
+                </div>
+            </div>
+
             <div class="packs">
-            ${packsHTML}
+                ${packsHTML}
             </div>
         </div>
             `

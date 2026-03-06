@@ -2,6 +2,7 @@
 body {
   padding: 0px;
   margin:0px;
+  height:100%;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -20,7 +21,6 @@ a {
 
 .login-signup-div {
   display:flex;
-  margin-left:auto;
   max-width:35%;
   margin-left:auto;
   margin-right: 2%;
@@ -83,15 +83,53 @@ a {
   background-color: #2A112E;
 }
 
+.store {
+  display: flex;
+  flex-direction: column; 
+  height:100%;
+}
+
 .packs {
   display:flex;
   margin-left:10px;
+  flex: 1; 
+  overflow-y: auto; 
 }
 
-.store h2 {
+.storeTitle {
+  margin-left:10px;
+  margin-top:20px;
+  margin-bottom:20px;
+  padding-left:20px;
+  padding-right:20px;
+  display:flex;
+  flex: 0 0 15%; 
+  text-align: left;
+  border-radius: 50px;
+
+  /*Glass effect */
+  background: rgba(178, 101, 186, 0.22);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(178, 101, 186, 0.3);
+}
+
+.storeTitle h2 {
+  font-size:50px;
+  color:white;
+}
+
+.currency {
+  align-items: center;
+  text-align:center;
+  display:flex;
+  margin-left:auto;
+}
+
+.currency p {
   font-size:30px;
   color:white;
-  margin-left:10px;
 }
 
 .cardPack {
