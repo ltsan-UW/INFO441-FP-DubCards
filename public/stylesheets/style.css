@@ -134,6 +134,18 @@ a {
   display: block;
 }
 
+.card-quantities {
+  position: absolute;
+  top: 81.5%;
+  left: 90%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.826);
+  background-color: #57007fb7;
+  font-size: 22px;
+  padding: 5px;
+  border-radius: 20%;
+}
+
 .invCards {
   display:flex;
   margin-left:10px;

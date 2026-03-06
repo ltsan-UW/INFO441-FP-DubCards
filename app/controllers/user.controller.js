@@ -10,8 +10,7 @@ export function getUser(req, res) {
       currency: 999,
       createdAt: Date.now(),
       inventory: [
-        {cardID: 1, name: "Campus Squirrel", imgPath: "CSquirrel.png", quantity: 1},
-        {cardID: 1, name: "Campus Squirrel", imgPath: "CSquirrel.png", quantity: 1},
+        {cardID: 1, name: "Campus Squirrel", quantity: 3}
       ],
       favorites: [1],
   }

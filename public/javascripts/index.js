@@ -42,8 +42,8 @@ async function loadPack(packID) {
         <h3>Rarities</h3>
         <ul>
         ${Object.entries(packJSON.rarities)
-        .map(([rarity, weight]) => `<li>${rarity}: ${weight}%</li>`)
-        .join("")}
+            .map(([rarity, weight]) => `<li>${rarity}: ${weight}%</li>`)
+            .join("")}
         </ul>
         <button onclick="openPack('${packJSON.packID}', '${packJSON.name}')">buy</button>
     </div>
@@ -53,31 +53,26 @@ async function loadPack(packID) {
 
 async function openPack(packID, packName) {
     try {
-        const cardsJSON = await fetchJSON(`api/store/packs/` + packID, {
-        method: "POST",
-        body: {}
-        })
-    const cards = await Promise.all(
-        cardsJSON.map(card => createCard(card))
-    );
 
-    let cardsHTML = `
+        let cardsHTML = `
         <div class="packCardsPage">
-        <h2>Cards received from ${packName}:</h2>
-        <div id="open-pack-div">${cards.join("")}<div/>
-        <button onclick="loadStore()">next</button>
+            <h2>Cards received from ${packName}:</h2>
+            <div id="open-pack-div"></div>
+            <button onclick="loadStore()">next</button>
         </div>
-    `;
-    document.getElementById("mainContent").innerHTML = cardsHTML;
+        `;
+        document.getElementById("mainContent").innerHTML = cardsHTML;
 
+        const cardsArray = await fetchJSON(`api/store/packs/` + packID, {
+            method: "POST",
+            body: {}
+        })
 
-    const newCards = document.querySelectorAll(".card");
-    VanillaTilt.init(newCards, {
-        max: 20,
-        speed: 400,
-        glare: true,
-        "max-glare": 0.4,
-    });
+        const packDiv = document.getElementById("open-pack-div");
+        const cards = await Promise.all(
+            cardsArray.map(card => createCard(card))
+        );
+        cards.forEach(card => packDiv.appendChild(card));
     } catch (error) {
         throw (error)
     }
@@ -88,34 +83,25 @@ async function loadInventory() {
     const userInfoJson = await fetchJSON(`api/user/${uid}`);
 
     console.log("Loading inventory...");
+
+    const inventory = document.createElement("div");
+    inventory.classList.add("inventory");
+
+    const title = document.createElement("h2");
+    title.textContent = "Your Inventory:";
+
+    const invCards = document.createElement("div");
+    invCards.classList.add("invCards");
     const cardsArray = userInfoJson.inventory;
-    console.log(cardsArray);
     const cards = await Promise.all(
         cardsArray.map(card => createCard(card))
     );
+    cards.forEach(card => invCards.appendChild(card));
 
-    console.log(cards);
+    inventory.appendChild(title);
+    inventory.appendChild(invCards);
 
-    let cardsHTML = cards.join("");
-
-    let inventoryHTML = `
-        <div class="inventory">
-            <h2>Your Inventory:</h2>
-            <div class="invCards">
-            ${cardsHTML}
-            </div>
-        </div>
-            `
-    document.getElementById("mainContent").innerHTML = inventoryHTML;
-
-    // Load function for everythung under the invCards div!
-    const newCards = document.querySelectorAll(".invCards .card");
-    VanillaTilt.init(newCards, {
-        max: 20,
-        speed: 400,
-        glare: true,
-        "max-glare": 0.4,
-    });
-
+    document.getElementById("mainContent").innerHTML = "";
+    document.getElementById("mainContent").appendChild(inventory);
     return;
 }
