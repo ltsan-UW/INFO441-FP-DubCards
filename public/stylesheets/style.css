@@ -81,22 +81,33 @@ a {
 #maincontent {
   flex-grow: 1;
   background-color: #2A112E;
+  display:flex;
+  flex-direction: column;
 }
 
-.store {
+.store, .inventory {
   display: flex;
   flex-direction: column; 
   height:100%;
+  margin-right:20px;
+  margin-bottom: 20px;
 }
 
-.packs {
+.packs, .invCards {
   display:flex;
   margin-left:10px;
-  flex: 1; 
+  flex: 1;  
   overflow-y: auto; 
+  border-radius: 50px;
+
+  background: rgba(178, 101, 186, 0.22);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(178, 101, 186, 0.3);
 }
 
-.storeTitle {
+.storeTitle, .inventoryTitle {
   margin-left:10px;
   margin-top:20px;
   margin-bottom:20px;
@@ -148,21 +159,21 @@ a {
 }
 
 .inventory h2 {
-  font-size:30px;
+  font-size:40px;
   color:white;
   margin-left:10px;
 }
 
 .card {
   font-size:20px;
-  width: 240px;
-  height: 336px;
+  width: 192px;
+  height: 269px;
   justify-content: center;
   align-items:center;
   text-align: center;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  margin: 10px;
+  margin: 20px;
 }
 
 .card img {

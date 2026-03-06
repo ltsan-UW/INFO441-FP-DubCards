@@ -100,8 +100,13 @@ async function loadInventory() {
     const inventory = document.createElement("div");
     inventory.classList.add("inventory");
 
+    const titleDiv = document.createElement("div");
+    titleDiv.classList.add("inventoryTitle")
+
     const title = document.createElement("h2");
     title.textContent = "Your Inventory:";
+
+    titleDiv.appendChild(title);
 
     const invCards = document.createElement("div");
     invCards.classList.add("invCards");
@@ -111,7 +116,7 @@ async function loadInventory() {
     );
     cards.forEach(card => invCards.appendChild(card));
 
-    inventory.appendChild(title);
+    inventory.appendChild(titleDiv);
     inventory.appendChild(invCards);
 
     document.getElementById("mainContent").innerHTML = "";
