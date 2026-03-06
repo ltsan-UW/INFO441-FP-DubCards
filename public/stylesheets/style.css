@@ -45,17 +45,6 @@ a {
   background: linear-gradient(135deg, #f6e27a, #d4af37, #f6e27a);
 }
 
-.title {
-  color:white;
-  font-style:italic;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  font-size:45px;
-  margin-left:2%;
-  background: linear-gradient(135deg, #f6e27a, #d4af37);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .flex-container {
   display: flex;
   min-height:100%;
