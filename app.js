@@ -18,6 +18,7 @@ import sessions from 'express-session'
 const azure_secret = process.env.AZURE_AUTH_SECRET;
 const azure_client_id = process.env.AZURE_CLIENT_ID;
 const azure_authority_id = process.env.AZURE_AUTHORITY_ID;
+const redirect_uri = process.env.REDIRECT_URI;
 
 connectDB();
 
@@ -45,7 +46,7 @@ const authProvider = await WebAppAuthProvider.initialize({
         authority: "https://login.microsoftonline.com/" + azure_authority_id,
         clientId: azure_client_id,
         clientSecret: azure_secret,
-        redirectUri: "/redirect",
+        redirectUri: redirect_uri,
     }
 });
 app.use(authProvider.authenticate({
