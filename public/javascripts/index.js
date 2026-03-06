@@ -92,7 +92,7 @@ async function openPack(packID, packName) {
 
 async function loadInventory() {
     const uid = 1;
-    const userInfoJson = await fetchJSON(`api/user/${uid}`);
+    const userInfoJson = await fetchJSON(`api/user/`);
 
     console.log("Loading inventory...");
     console.log(userInfoJson)

@@ -3,6 +3,9 @@ var router = express.Router();
 
 import * as userController from '../controllers/user.controller.js';
 
+// GET /user - Allows the logged in user to see their own information; what cards they have, their trade requests and their favorites list.
+router.get('/', userController.getUser);
+
 // GET /user/:id - Allows users to see their information; what cards they have, their trade requests and their favorites list.
 router.get('/:id', userController.getUser);
 

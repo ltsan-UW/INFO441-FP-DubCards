@@ -1,26 +1,50 @@
-import mongoose from "mongoose";
 import UserModel from "../models/User.model.js";
+import TradeModel from "../models/Trade.model.js";
 
-// GET /user/:id - Allows users to see their information; what cards they have, their trade requests and their favorites list.
-export function getUser(req, res) {
-  // to-do db connect
-  const testData = {
-    userID: 1,
-    username: "test-user-one",
-    email: "test@email.com",
-    currency: 999,
-    createdAt: Date.now(),
-    inventory: [
-      { cardID: 1, name: "Campus Squirrel", quantity: 3 }
-    ],
-    favorites: [1],
+// GET /user/:id
+export async function getUser(req, res) {
+  try {
+    if (!req.authContext?.isAuthenticated()) {
+      return res.status(401).json({ status: "error", error: "Not logged in" });
+    }
+    const email = req.authContext.getAccount().username;
+    const user = await UserModel.findOne({ email });
+    if (!user) return res.status(404).json({ status: "error", error: "User not found" });
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ status: "error", error });
   }
-  res.send(testData);
 }
 
-// POST /user/:id/cards - Allows users to sell cards that they have.
-export function postCards(req, res) {
-  res.send("To-do endpoint");
+// POST /user/sell - sell a card (remove from inventory)
+export async function postCards(req, res) {
+  try {
+    if (!req.authContext?.isAuthenticated()) {
+      return res.status(401).json({ status: "error", error: "Not logged in" });
+    }
+    const email = req.authContext.getAccount().username;
+    const { cardIDs } = req.body;
+    if(!Array.isArray(cardIDs) || cardIDs?.length === 0) return res.status(400).send({ error: "cardIDs missing" });
+
+    const user = await UserModel.findOne({ email });
+    if (!user) return res.status(404).json({ status: "error", error: "User not found" });
+
+    cardIDs.forEach((cardID) => {
+      const cardIndex = user.inventory.findIndex(i => i.cardID === cardID);
+      if (cardIndex === -1) return res.status(404).json({ status: "error", error: "Card not in inventory" });
+      if (user.inventory[cardIndex].quantity > 1) {
+        user.inventory[cardIndex].quantity -= 1;
+      } else {
+        user.inventory.splice(cardIndex, 1);
+      }
+    })
+
+    await user.save();
+    res.json({ status: "success", inventory: user.inventory });
+  } catch (error) {
+    res.status(500).json({ status: "error", error });
+  }
 }
 
 // POST /user/favorites - Allows users to add cards to their favorites list.
@@ -37,16 +61,34 @@ export async function postFavorites(req, res) {
       { email: account.username },
       (favorited ? { $addToSet: { favorites: cardID } } : { $pull: { favorites: cardID } }),
     );
-    if (!user) return res.status(404).send({ status: "error", error: "user not found" });
+    if (!user) return res.status(404).send({ status: "error", error: "User not found" });
 
-    res.send({ status: "success", favorites: user.favorites });
+    res.send({ status: "success"});
   } catch (error) {
     console.error("Error connecting to DB:", error);
     res.status(500).send({ status: "error", error });
   }
 }
 
-// POST /user/trade - Allows users to send or edit trade requests to another user.
-export function postTrades(req, res) {
-  res.send("To-do endpoint");
+// POST /user/trade - send a trade request
+export async function postTrades(req, res) {
+  try {
+    const { receiverUsername, senderCards, receiverCards } = req.body;
+    const email = req.authContext.getAccount().username;
+    const sender = await UserModel.findOne({ email });
+    if (!sender) return res.status(404).json({ status: "error", error: "Sender not found" });
+
+    const trade = new TradeModel({
+      senderUsername: sender.username,
+      receiverUsername,
+      senderCards,
+      receiverCards,
+      status: "pending",
+    });
+
+    await trade.save();
+    res.json({ status: "success", trade });
+  } catch (error) {
+    res.status(500).json({ status: "error", error });
+  }
 }
