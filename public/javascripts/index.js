@@ -104,7 +104,7 @@ async function loadInventory() {
     titleDiv.classList.add("inventoryTitle")
 
     const title = document.createElement("h2");
-    title.textContent = "Your Inventory:";
+    title.textContent = "Your Inventory";
 
     titleDiv.appendChild(title);
 
