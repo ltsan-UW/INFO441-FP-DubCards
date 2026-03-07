@@ -8,33 +8,47 @@ async function init() {
 
 async function loadStore() {
     const storeJson = await fetchJSON(`api/store/packs`);
-    console.log(storeJson)
-
     const userJson = await fetchJSON(`api/user/`);
 
     let currency = userJson.currency;
 
-    const packs = await Promise.all(
-        storeJson.map(pack => createPack(pack))
-    );
-    let packsHTML = packs.join("");
+    //get maincontent div
+    const mainContent = document.getElementById("mainContent");
+    mainContent.innerHTML = "";
 
-    let storeHTML = `
-        <div class="store">
-            <div class="storeTitle">
-                <h2>Pack Store!</h2>
-                <div class="currency">
-                <p>${currency}</p>
-                </div>
-            </div>
+    //make elements of everything in the store below:
+    const store = document.createElement("div");
+    store.classList.add("store");
 
-            <div class="packs">
-                ${packsHTML}
-            </div>
-        </div>
-            `
-    document.getElementById("mainContent").innerHTML = storeHTML;
-    return;
+    const storeTitle = document.createElement("div");
+    storeTitle.classList.add("storeTitle");
+
+    const title = document.createElement("h2");
+    title.textContent = "Pack Store!";
+
+    const currencyDiv = document.createElement("div");
+    currencyDiv.classList.add("currency");
+
+    const currencyText = document.createElement("p");
+    currencyText.textContent = currency;
+
+    currencyDiv.appendChild(currencyText);
+
+    storeTitle.appendChild(title);
+    storeTitle.appendChild(currencyDiv);
+
+    const packsContainer = document.createElement("div");
+    packsContainer.classList.add("packs");
+
+    store.appendChild(storeTitle);
+    store.appendChild(packsContainer);
+
+    mainContent.appendChild(store);
+
+    //for each in the json, add a pack as a child to the packs container!
+    storeJson.forEach(packData => {
+        packsContainer.appendChild(createPack(packData));
+    });
 }
 
 async function loadPack(packID) {

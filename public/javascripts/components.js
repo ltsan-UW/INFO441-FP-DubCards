@@ -68,12 +68,58 @@ async function createCard(cardData, favorites, tilt = true) {
 }
 // <img href="./images/${cardData.cardID}"></img>
 
-function createPack(packData) {
+function createPack(packData, tilt = true) {
+
+  //Initial cardpack div
+  const pack = document.createElement("div");
+  pack.classList.add("cardPack");
+  pack.id = `pack-${packData._id}`;
+
+  //Card img aka first half of the cardpack div
+  const img = document.createElement("img");
+  img.src = `../images/packs/${packData._id.toString()}.png`;
+  img.setAttribute("data-tilt", "");
+  img.setAttribute("data-tilt-scale", "1.05");
+  pack.appendChild(img);
+
+  //subtext aka second half of the cardpack div
+  const subtext = document.createElement("div");
+  subtext.classList.add("cardPackSubtext");
+  pack.appendChild(subtext);
+
+  const cardTitle = document.createElement("strong");
+  cardTitle.textContent = packData.name;
+  subtext.appendChild(cardTitle);
+
+  const subtextDiv = document.createElement("div");
+  subtext.appendChild(subtextDiv)
+
+  const price = document.createElement("p");
+  price.textContent = `Price: ${packData.price}`;
+
+  const button = document.createElement("button");
+  button.textContent = "View";
+
+  subtextDiv.appendChild(price);
+  subtextDiv.appendChild(button);
+
+  button.addEventListener("click", async () => {
+    loadPack(packData._id);
+  })
+
+  return pack;
+
   return `
-      <div class="cardPack" id="pack-${packData._id}">
-        <strong>${packData.name}</strong>
-        <p>Price: ${packData.price}</p>
-        <button onclick="loadPack('${packData._id}')">more</button>
+      <div class="cardPack" id="pack-${packData._id.toString()}">
+
+        <img data-tilt data-tilt-scale src="images/packs/${packData._id.toString()}.png">
+        <div class="cardPackSubtext">
+          <strong>${packData.name}</strong>
+          <div>
+            <p>Price: ${packData.price}</p>
+            <button onclick="loadPack('${packData._id}')">View</button>
+          </div>
+        </div>
       </div>
     `
 }
