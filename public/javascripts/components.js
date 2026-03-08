@@ -99,6 +99,8 @@ function createPack(packData, tilt = true) {
 
   const button = document.createElement("button");
   button.textContent = "View";
+  button.setAttribute("data-tilt", "");
+  button.setAttribute("data-tilt-scale", "1.05");
 
   subtextDiv.appendChild(price);
   subtextDiv.appendChild(button);
@@ -107,19 +109,20 @@ function createPack(packData, tilt = true) {
     loadPack(packData._id);
   })
 
+  if (tilt) {
+    VanillaTilt.init(img, {
+      max: 0.1,
+      speed: 400,
+      glare: true,
+      "max-glare": 0.4,
+    })
+    VanillaTilt.init(button, {
+      max: 0.1,
+      speed: 400,
+      glare: true,
+      "max-glare": 0.4,
+    })
+  }
+
   return pack;
-
-  return `
-      <div class="cardPack" id="pack-${packData._id.toString()}">
-
-        <img data-tilt data-tilt-scale src="images/packs/${packData._id.toString()}.png">
-        <div class="cardPackSubtext">
-          <strong>${packData.name}</strong>
-          <div>
-            <p>Price: ${packData.price}</p>
-            <button onclick="loadPack('${packData._id}')">View</button>
-          </div>
-        </div>
-      </div>
-    `
 }
