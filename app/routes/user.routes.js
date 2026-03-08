@@ -10,7 +10,7 @@ router.get('/', userController.getUser);
 router.get('/:username', userController.getUser);
 
 // POST /user/sell - Allows users to sell cards that they have.
-router.post('/sell', userController.postCards);
+router.post('/sell', userController.sellCards);
 
 // POST /user/favorites - Allows users to add cards to their favorites list.
 router.post('/favorites', userController.postFavorites);

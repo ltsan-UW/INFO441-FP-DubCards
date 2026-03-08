@@ -125,10 +125,10 @@ async function loadInventory() {
     const invCards = document.createElement("div");
     invCards.classList.add("invCards");
 
-    const selectedCards = [];
+    const selectedCards = {};
     const cardsArray = userInfoJson.inventory;
     const cards = await Promise.all(
-        cardsArray.map(card => createCard(card, userInfoJson.favorites, selectedCards))
+        cardsArray.map(card => createCard(card, userInfoJson.favorites, true, selectedCards))
     );
     cards.forEach(card => invCards.appendChild(card));
 
@@ -136,10 +136,53 @@ async function loadInventory() {
     inventory.appendChild(invWrapper);
     invWrapper.classList.add("invWrapper");
     invWrapper.appendChild(invCards);
-    const sellButton = document.createElement("button");
-    sellButton.classList.add("sell-button");
+
     const sellCards = document.createElement("div");
     sellCards.classList.add("sellCards");
+    sellCards.classList.add("hidden");
+    const sellOptions = document.createElement("div");
+    sellOptions.classList.add("sellOptions");
+    const sellText = document.createElement("p");
+    sellText.classList.add("sell-text");
+    sellText.textContent = `Sell for 0?`
+    sellOptions.appendChild(sellText);
+    sellCards.appendChild(sellOptions);
+
+    // Sell submit button sends a post request to sell the cards in the selectedCards object.
+    const sellSubmitButton = document.createElement("button");
+    sellSubmitButton.classList.add("sell-submit-button");
+    sellSubmitButton.innerText = "Submit";
+    sellOptions.appendChild(sellSubmitButton);
+    sellSubmitButton.onclick = async () => {
+        const result = await fetchJSON(`api/user/sell/`, {
+            method: "POST",
+            body: { cardIDs: selectedCards }
+        })
+    }
+
+    // Sell button adds an overlay to all the cards with a grey affect, and reveals the sellCards div
+    const sellButton = document.createElement("button");
+    sellButton.classList.add("sell-button");
+    sellButton.innerText = "Sell"
+    sellButton.onclick = () => {
+        sellCards.classList.toggle("hidden");
+        cards.forEach(card => {
+            card.classList.toggle("card-sell")
+            let overlay = card.querySelector(".card-sell-icon");
+            if (!overlay) {
+                overlay = document.createElement("div");
+                const text = document.createElement("div");
+                const icon = document.createElement("div");
+                text.textContent = "Sell for 100";
+                icon.textContent = "+";
+                overlay.appendChild(text);
+                overlay.appendChild(icon);
+                overlay.classList.add("card-sell-icon");
+                card.appendChild(overlay);
+            } else overlay.remove();
+        });
+    }
+
     invWrapper.appendChild(sellButton);
     invWrapper.appendChild(sellCards);
 

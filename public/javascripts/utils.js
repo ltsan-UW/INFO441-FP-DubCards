@@ -41,3 +41,24 @@ async function displayError(){
     document.getElementById('errorInfo').innerText= ''
     document.getElementById('errorInfo').style.opacity = 0
 }
+
+
+function updateSellAmmount(add, rarity){
+    const sellText = document.querySelector(".sell-text");
+    let text = sellText.textContent;
+    const currentPrice = parseInt(text.replace("Sell for ", "").replace("?", ""), 10);
+    sellText.textContent = `Sell for ${currentPrice + ((add ? 1 : -1) * 10)}?`  // NEED TO ADD RARITY
+}
+
+function getRarityPrice(rarity) {
+  const rarityPrices = {
+    "Common": 10,
+    "Uncommon": 25,
+    "Rare": 50,
+    "Ultra Rare": 100,
+    "Legendary": 250
+  };
+  return rarityPrices[rarity];
+}
+
+// To-do: rarity calculation, cards go back on sell, post submit, sell for overlay has rarity and also goes away when no quantity

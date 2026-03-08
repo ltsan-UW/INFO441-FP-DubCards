@@ -1,5 +1,8 @@
 import UserModel from "../models/User.model.js";
 import TradeModel from "../models/Trade.model.js";
+import CardModel from "../models/Card.model.js";
+
+import { getRarityPrice } from "../utils/user.utils.js";
 
 // GET /user/:id
 export async function getUser(req, res) {
@@ -24,31 +27,36 @@ export async function getUser(req, res) {
 }
 
 // POST /user/sell - sell a card (remove from inventory)
-export async function postCards(req, res) {
+export async function sellCards(req, res) {
   try {
     if (!req.authContext?.isAuthenticated()) {
       return res.status(401).json({ status: "error", error: "Not logged in" });
     }
     const email = req.authContext.getAccount().username;
     const { cardIDs } = req.body;
-    if(!Array.isArray(cardIDs) || cardIDs?.length === 0) return res.status(400).send({ error: "cardIDs missing" });
+    if(!typeof cardIDs === 'object' || cardIDs?.length === 0) return res.status(400).send({ error: "cardIDs missing" });
 
     const user = await UserModel.findOne({ email });
     if (!user) return res.status(404).json({ status: "error", error: "User not found" });
 
-    cardIDs.forEach((cardID) => {
-      const cardIndex = user.inventory.findIndex(i => i.cardID === cardID);
+    for(const cardID in cardIDs) {
+      const cardIndex = user.inventory.findIndex(i => i.cardID === Number(cardID));
       if (cardIndex === -1) return res.status(404).json({ status: "error", error: "Card not in inventory" });
-      if (user.inventory[cardIndex].quantity > 1) {
-        user.inventory[cardIndex].quantity -= 1;
-      } else {
-        user.inventory.splice(cardIndex, 1);
-      }
-    })
+      const sellCount = cardIDs[cardID];
+      const invCount = user.inventory[cardIndex].quantity;
 
+      if (invCount > sellCount) {
+        user.inventory[cardIndex].quantity -= sellCount;
+      } else if (invCount === sellCount) {
+        user.inventory.splice(cardIndex, 1);
+      } else return res.status(404).json({ status: "error", error: `Not enough quantity owned for card ${cardID}` });
+      const cardData = await CardModel.findOne({ cardID: cardID });
+      user.currency += getRarityPrice(cardData.rarity) * sellCount;
+    }
     await user.save();
     res.json({ status: "success", inventory: user.inventory });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ status: "error", error });
   }
 }

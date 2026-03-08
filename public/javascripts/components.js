@@ -7,7 +7,7 @@
 //     </div> `
 // }
 
-async function createCard(cardData, favorites, tilt = true) {
+async function createCard(cardData, favorites, tilt = true, selectedCards) {
   const card = document.createElement("div");
   card.classList.add("card", `rarity_${cardData.rarity}`);
   card.setAttribute("data-tilt", "");
@@ -67,7 +67,9 @@ async function createCard(cardData, favorites, tilt = true) {
   }
 
   card.addEventListener("click", () => {
-    if (cardData?.quantity && cardData.quantity > 0) handleCardClick(cardData, card, cardQuantityDiv)
+    if (card.classList.contains("card-sell") && cardData?.quantity && cardData.quantity > 0) {
+      handleCardClick(cardData, card, cardQuantityDiv, selectedCards);
+    }
   });
 
   return card;
@@ -75,10 +77,20 @@ async function createCard(cardData, favorites, tilt = true) {
 
 // Create a "smallCard" object, scale it to the big card and move it to .sellCards
 // On click, give back 1 quantity to big card and remove small card
-async function handleCardClick(cardData, card, cardQuantityDiv) {
+async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
   cardData.quantity--;
-  if (cardData.quantity === 0) card.classList.add("card-noquantity");
+  if(selectedCards[cardData.cardID] !== undefined) {
+    selectedCards[cardData.cardID]++;
+  } else  selectedCards[cardData.cardID] = 1;
+
+  if (cardData.quantity === 0) {
+    card.classList.add("card-noquantity");
+    card.querySelector(".card-sell-icon").classList.add("hidden");
+  }
   cardQuantityDiv.textContent = `×${cardData.quantity}`;
+
+  updateSellAmmount(true);
+
   const target = document.querySelector(".sellCards");
   const first = card.querySelector("img").getBoundingClientRect();
   const smallCard = document.createElement("img");
@@ -101,7 +113,13 @@ async function handleCardClick(cardData, card, cardQuantityDiv) {
 
   // On click: move and scale back to big card, then remove small card and remove noquanitity class on card
   smallCard.addEventListener("click", () => {
-    console.log("clicked")
+
+    updateSellAmmount(false);
+
+    if(selectedCards[cardData.cardID] === 1) {
+      delete selectedCards[cardData.cardID];
+    } else  selectedCards[cardData.cardID]--;
+
     const last = smallCard.getBoundingClientRect();
     smallCard.style.zIndex = 0;
     const dx = first.left - last.left + first.width / 2 - last.width / 2;
@@ -114,7 +132,10 @@ async function handleCardClick(cardData, card, cardQuantityDiv) {
       if (e.propertyName === "transform") {
         smallCard.remove();
         cardData.quantity++;
-        if (cardData.quantity > 0) card.classList.remove("card-noquantity");
+        if (cardData.quantity > 0) {
+          card.classList.remove("card-noquantity");
+          card.querySelector(".card-sell-icon").classList.remove("hidden");
+        }
         cardQuantityDiv.textContent = `×${cardData.quantity}`;
       }}, { once: true });
   });
