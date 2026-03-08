@@ -1,4 +1,3 @@
-
 body {
   padding: 0px;
   margin:0px;
@@ -10,6 +9,12 @@ body {
 a {
   color: #00B7FF;
 }
+
+/* 
+========================================
+            MAIN SITE STYLES
+========================================
+*/
 
 .navbar {
   background-color: #3E1944; /*just to test*/
@@ -75,6 +80,12 @@ a {
   flex-direction: column;
 }
 
+/* 
+========================================
+        STORE/INVENTORY STYLES
+========================================
+*/
+
 .store, .inventory {
   display: flex;
   flex-direction: column;
@@ -109,6 +120,7 @@ a {
   flex: 0 0 15%;
   text-align: left;
   border-radius: 50px;
+  align-items:center;
 
   /*Glass effect */
   background: rgba(178, 101, 186, 0.22);
@@ -117,6 +129,76 @@ a {
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(178, 101, 186, 0.3);
 }
+
+/* 
+========================================
+        INVENTORY/CARD SPECIFIC
+========================================
+*/
+
+.inventoryTitle h2 {
+  font-size:40px;
+  color:white;
+  margin-left:10px;
+}
+
+.card {
+  font-size:20px;
+  width: 192px;
+  height: 269px;
+  justify-content: center;
+  align-items:center;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  margin: 20px;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-quantities {
+  position: absolute;
+  top: 81.5%;
+  left: 90%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.826);
+  background-color: #57007fb7;
+  font-size: 22px;
+  padding: 5px;
+  border-radius: 20%;
+  user-select: none;
+  cursor: default;
+}
+
+.card-favorite {
+  position: absolute;
+  top: 80%;
+  left: 9%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.826);
+  font-size: 35px;
+  margin: 0px;
+  padding: 5px;
+  border-radius: 20%;
+  user-select: none;
+  cursor: pointer;
+}
+
+.invCards {
+  display:flex;
+  margin-left:10px;
+}
+
+/* 
+========================================
+        STORE/PACKS SPECIFIC
+========================================
+*/
 
 .storeTitle h2 {
   font-size:50px;
@@ -202,71 +284,10 @@ a {
 
 .cardPackSubtext div p{
   width:50%;
-
 }
-
-
 
 .packPage {
   background-color: aliceblue;
-}
-
-.inventory h2 {
-  font-size:40px;
-  color:white;
-  margin-left:10px;
-}
-
-.card {
-  font-size:20px;
-  width: 192px;
-  height: 269px;
-  justify-content: center;
-  align-items:center;
-  text-align: center;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  margin: 20px;
-}
-
-.card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.card-quantities {
-  position: absolute;
-  top: 81.5%;
-  left: 90%;
-  transform: translate(-50%, -50%);
-  color: rgba(255, 255, 255, 0.826);
-  background-color: #57007fb7;
-  font-size: 22px;
-  padding: 5px;
-  border-radius: 20%;
-  user-select: none;
-  cursor: default;
-}
-
-.card-favorite {
-  position: absolute;
-  top: 80%;
-  left: 9%;
-  transform: translate(-50%, -50%);
-  color: rgba(255, 255, 255, 0.826);
-  font-size: 35px;
-  margin: 0px;
-  padding: 5px;
-  border-radius: 20%;
-  user-select: none;
-  cursor: pointer;
-}
-
-.invCards {
-  display:flex;
-  margin-left:10px;
 }
 
 #open-pack-div {
