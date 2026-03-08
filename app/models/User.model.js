@@ -10,6 +10,11 @@ const userSchema = new mongoose.Schema({
     {
       name: { type: String, required: true },
       cardID: { type: Number, required: true },
+      rarity: {
+        type: String,
+        enum: ['Common', 'Uncommon', 'Rare', 'Ultra-Rare', 'Legendary'],
+        required: true,
+      },
       quantity: { type: Number, default: 1 },
     },
   ],

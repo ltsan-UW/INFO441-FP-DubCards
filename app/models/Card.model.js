@@ -6,7 +6,7 @@ const cardSchema = new mongoose.Schema({
   description: { type: String },
   rarity: {
     type: String,
-    enum: ['Common', 'Uncommon', 'Rare', 'Ultra Rare', 'Legendary'],
+    enum: ['Common', 'Uncommon', 'Rare', 'Ultra-Rare', 'Legendary'],
     required: true,
   },
   packID: { type: mongoose.ObjectId, required: true },

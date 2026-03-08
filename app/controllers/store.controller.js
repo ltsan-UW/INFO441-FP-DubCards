@@ -74,7 +74,7 @@ export async function openPack(req, res) {
       if (existing) {
         existing.quantity += 1;
       } else {
-        user.inventory.push({ cardID: card.cardID, name: card.name, quantity: 1 });
+        user.inventory.push({ cardID: card.cardID, name: card.name, rarity: card.rarity, quantity: 1 });
       }
     }
     await user.save();

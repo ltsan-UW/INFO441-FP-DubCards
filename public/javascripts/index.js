@@ -149,6 +149,7 @@ async function loadInventory() {
     sellCards.appendChild(sellOptions);
 
     // Sell submit button sends a post request to sell the cards in the selectedCards object.
+    // If successful: removes small card imgs and div cards if not in inventory, updates sell amount
     const sellSubmitButton = document.createElement("button");
     sellSubmitButton.classList.add("sell-submit-button");
     sellSubmitButton.innerText = "Submit";
@@ -158,6 +159,16 @@ async function loadInventory() {
             method: "POST",
             body: { cardIDs: selectedCards }
         })
+        if(result.status == "success") {
+            sellCards.querySelectorAll("img").forEach(img => img.remove());
+            cards.forEach(card => {
+                const cardID = Number(card.classList[2].replace("id_", ""));
+                if(!(result.inventory.some(invCard => invCard.cardID === cardID))) {
+                    card.remove();
+                }
+            });
+            updateSellAmmount(null, null, true);
+        }
     }
 
     // Sell button adds an overlay to all the cards with a grey affect, and reveals the sellCards div
@@ -173,7 +184,7 @@ async function loadInventory() {
                 overlay = document.createElement("div");
                 const text = document.createElement("div");
                 const icon = document.createElement("div");
-                text.textContent = "Sell for 100";
+                text.textContent = "Sell for " + getRarityPrice(card.classList[1].replace("rarity_", ""));
                 icon.textContent = "+";
                 overlay.appendChild(text);
                 overlay.appendChild(icon);

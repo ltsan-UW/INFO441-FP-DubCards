@@ -11,7 +11,7 @@ const packSchema = new mongoose.Schema({
       "Common": 60,
       "Uncommon": 20,
       "Rare": 12,
-      "Ultra Rare": 6,
+      "Ultra-Rare": 6,
       "Legendary": 2
     },
     required: true

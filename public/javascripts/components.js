@@ -9,7 +9,7 @@
 
 async function createCard(cardData, favorites, tilt = true, selectedCards) {
   const card = document.createElement("div");
-  card.classList.add("card", `rarity_${cardData.rarity}`);
+  card.classList.add("card", `rarity_${cardData.rarity}`, `id_${cardData.cardID}`);
   card.setAttribute("data-tilt", "");
   card.setAttribute("data-tilt-scale", "1.05");
 
@@ -89,7 +89,7 @@ async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
   }
   cardQuantityDiv.textContent = `×${cardData.quantity}`;
 
-  updateSellAmmount(true);
+  updateSellAmmount(true, cardData.rarity);
 
   const target = document.querySelector(".sellCards");
   const first = card.querySelector("img").getBoundingClientRect();
@@ -114,7 +114,7 @@ async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
   // On click: move and scale back to big card, then remove small card and remove noquanitity class on card
   smallCard.addEventListener("click", () => {
 
-    updateSellAmmount(false);
+    updateSellAmmount(false, cardData.rarity);
 
     if(selectedCards[cardData.cardID] === 1) {
       delete selectedCards[cardData.cardID];
