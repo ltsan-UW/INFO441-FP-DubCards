@@ -32,30 +32,9 @@ async function createCard(cardData, favorites, tilt = true, selectedCards) {
   if (Array.isArray(favorites)) {
     const favorite = document.createElement("div");
     favorite.classList.add("card-favorite");
-
     favorite.textContent = favorites.includes(cardData.cardID) ? "★" : "☆";
     card.appendChild(favorite);
-
-    favorite.addEventListener("click", async () => {
-      const isFav = favorites.includes(cardData.cardID);
-      if (!isFav) {
-        favorite.textContent = "★";
-        favorites.push(cardData.cardID);
-      } else {
-        favorite.textContent = "☆";
-        const index = favorites.indexOf(cardData.cardID);
-        if (index !== -1) favorites.splice(index, 1);
-      }
-
-      try {
-        await fetchJSON(`api/user/favorites`, {
-          method: "POST",
-          body: { cardID: cardData.cardID, favorited: !isFav }
-        })
-      } catch (error) {
-        console.log("Error connection to db", error)
-      }
-    });
+    favorite.addEventListener("click", async () => {handleFavoriteClick(favorites, cardData.cardID)});
   }
   if (tilt) {
     VanillaTilt.init(card, {
@@ -75,13 +54,34 @@ async function createCard(cardData, favorites, tilt = true, selectedCards) {
   return card;
 }
 
+// Handles click for when the favorites star on a card is clicked
+// favorites: list of favorite cardIDs | cardID: card id of the clicked card
+async function handleFavoriteClick(favorites, cardID) {
+      const isFav = favorites.includes(cardID);
+      if (!isFav) {
+        favorite.textContent = "★";
+        favorites.push(cardID);
+      } else {
+        favorite.textContent = "☆";
+        const index = favorites.indexOf(cardID);
+        if (index !== -1) favorites.splice(index, 1);
+      }
+
+      try {
+        await fetchJSON(`api/user/favorites`, {
+          method: "POST",
+          body: { cardID: cardID, favorited: !isFav }
+        })
+      } catch (error) { console.log("Error connection to db", error) }
+    }
+
 // Create a "smallCard" object, scale it to the big card and move it to .sellCards
 // On click, give back 1 quantity to big card and remove small card
 async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
   cardData.quantity--;
-  if(selectedCards[cardData.cardID] !== undefined) {
+  if (selectedCards[cardData.cardID] !== undefined) {
     selectedCards[cardData.cardID]++;
-  } else  selectedCards[cardData.cardID] = 1;
+  } else selectedCards[cardData.cardID] = 1;
 
   if (cardData.quantity === 0) {
     card.classList.add("card-noquantity");
@@ -91,16 +91,15 @@ async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
 
   updateSellAmmount(true, cardData.rarity);
 
-  const target = document.querySelector(".sellCards");
-  const first = card.querySelector("img").getBoundingClientRect();
   const smallCard = document.createElement("img");
   smallCard.classList.add("card-small");
   smallCard.style.zIndex = 1;
   smallCard.src = card.querySelector("img").src;
 
   target.appendChild(smallCard);
+  const target = document.querySelector(".sellCards");
+  const first = card.querySelector("img").getBoundingClientRect();
   const last = smallCard.getBoundingClientRect();
-
   const dx = first.left - last.left + first.width / 2 - last.width / 2;
   const dy = first.top - last.top + first.height / 2 - last.height / 2;
   const scale = (first.width - 10) / last.width;
@@ -111,35 +110,38 @@ async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
     smallCard.style.transform = "";
   });
 
-  // On click: move and scale back to big card, then remove small card and remove noquanitity class on card
-  smallCard.addEventListener("click", () => {
+  smallCard.addEventListener("click", () => {handleSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv)});
+}
 
-    updateSellAmmount(false, cardData.rarity);
+// On click: move and scale back to big card, then remove small card and remove noquanitity class on card
+function handleSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv) {
+  updateSellAmmount(false, cardData.rarity);
+  if (selectedCards[cardData.cardID] === 1) {
+    delete selectedCards[cardData.cardID];
+  } else selectedCards[cardData.cardID]--;
 
-    if(selectedCards[cardData.cardID] === 1) {
-      delete selectedCards[cardData.cardID];
-    } else  selectedCards[cardData.cardID]--;
-
-    const last = smallCard.getBoundingClientRect();
-    smallCard.style.zIndex = 0;
-    const dx = first.left - last.left + first.width / 2 - last.width / 2;
-    const dy = first.top - last.top + first.height / 2 - last.height / 2;
-    requestAnimationFrame(() => {
-      smallCard.style.transition = "transform 0.4s ease";
-      smallCard.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
-    });
-    smallCard.addEventListener("transitionend", (e) => {
-      if (e.propertyName === "transform") {
-        smallCard.remove();
-        cardData.quantity++;
-        if (cardData.quantity > 0) {
-          card.classList.remove("card-noquantity");
-          card.querySelector(".card-sell-icon").classList.remove("hidden");
-        }
-        cardQuantityDiv.textContent = `×${cardData.quantity}`;
-      }}, { once: true });
+  smallCard.style.zIndex = 0; // Puts small card under big card
+  const first = card.querySelector("img").getBoundingClientRect();
+  const last = smallCard.getBoundingClientRect();
+  const dx = first.left - last.left + first.width / 2 - last.width / 2;
+  const dy = first.top - last.top + first.height / 2 - last.height / 2;
+  const scale = (first.width - 10) / last.width;
+  requestAnimationFrame(() => {
+    smallCard.style.transition = "transform 0.4s ease";
+    smallCard.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
   });
-};
+  smallCard.addEventListener("transitionend", (e) => {
+    if (e.propertyName === "transform") {
+      smallCard.remove();
+      cardData.quantity++;
+      if (cardData.quantity > 0) {
+        card.classList.remove("card-noquantity");
+        card.querySelector(".card-sell-icon").classList.remove("hidden");
+      }
+      cardQuantityDiv.textContent = `×${cardData.quantity}`;
+    }
+  }, { once: true });
+}
 
 function createPack(packData, tilt = true) {
 

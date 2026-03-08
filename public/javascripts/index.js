@@ -159,11 +159,11 @@ async function loadInventory() {
             method: "POST",
             body: { cardIDs: selectedCards }
         })
-        if(result.status == "success") {
+        if (result.status == "success") {
             sellCards.querySelectorAll("img").forEach(img => img.remove());
             cards.forEach(card => {
                 const cardID = Number(card.classList[2].replace("id_", ""));
-                if(!(result.inventory.some(invCard => invCard.cardID === cardID))) {
+                if (!(result.inventory.some(invCard => invCard.cardID === cardID))) {
                     card.remove();
                 }
             });
@@ -172,26 +172,28 @@ async function loadInventory() {
     }
 
     // Sell button adds an overlay to all the cards with a grey affect, and reveals the sellCards div
+    // If cards still selected: reset sell text, remove small imgs, reset card quantities
     const sellButton = document.createElement("button");
     sellButton.classList.add("sell-button");
     sellButton.innerText = "Sell"
     sellButton.onclick = () => {
         sellCards.classList.toggle("hidden");
-        cards.forEach(card => {
-            card.classList.toggle("card-sell")
-            let overlay = card.querySelector(".card-sell-icon");
-            if (!overlay) {
-                overlay = document.createElement("div");
-                const text = document.createElement("div");
-                const icon = document.createElement("div");
-                text.textContent = "Sell for " + getRarityPrice(card.classList[1].replace("rarity_", ""));
-                icon.textContent = "+";
-                overlay.appendChild(text);
-                overlay.appendChild(icon);
-                overlay.classList.add("card-sell-icon");
-                card.appendChild(overlay);
-            } else overlay.remove();
-        });
+        if(Object.keys(selectedCards).length !== 0) {
+            sellCards.querySelectorAll("img").forEach(img => img.remove());
+            updateSellAmmount(null, null, true);
+            userInfoJson.inventory.forEach(cardData => {
+                const cardID = cardData.cardID;
+                if (selectedCards[cardID] !== undefined) {
+                    const cardElement = invCards.querySelector(".id_" + cardID);
+                    const quantElement = cardElement.querySelector(".card-quantities");
+                    quantElement.textContent = `×${cardData.quantity + selectedCards[cardID]}`;
+                    cardElement.classList.remove("card-noquantity");
+                    cardData.quantity += selectedCards[cardID];
+                }
+            })
+            Object.keys(selectedCards).forEach(cardID => delete selectedCards[cardID]);
+        }
+        cards.forEach(createCardOverlay);
     }
 
     invWrapper.appendChild(sellButton);
