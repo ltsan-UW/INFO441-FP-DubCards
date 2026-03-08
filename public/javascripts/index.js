@@ -53,27 +53,42 @@ async function loadStore() {
 
 async function loadPack(packID) {
     const packJSON = await fetchJSON(`api/store/packs/` + packID)
-    let packHTML = `
-    <div class="packPage">
-        <button onclick="loadStore()">back</button>
-        <h2>${packJSON.name}</h2>
-        <p><strong>Description:</strong> ${packJSON.description}</p>
-        <p><strong>Price:</strong> $${packJSON.price}</p>
-        <p><strong>Pack ID:</strong> ${packID}</p>
 
-        <h3>Cards</h3>
-        <ul>
-        ${packJSON.cards.map(card => `<li>Card Name: ${card}</li>`).join("")}
-        </ul>
-        <h3>Rarities</h3>
-        <ul>
-        ${Object.entries(packJSON.rarities)
-            .map(([rarity, weight]) => `<li>${rarity}: ${weight}%</li>`)
-            .join("")}
-        </ul>
-        <button onclick="openPack('${packID}', '${packJSON.name}')">buy</button>
+    let packHTML = 
+`    <div class="packPage">
+
+    <div class="packPageLeft">
+
     </div>
-    `;
+
+    <div class="packPageRight">
+
+    </div>
+
+
+    </div>`
+    
+    // let packHTML = `
+    // <div class="packPage">
+    //     <button onclick="loadStore()">back</button>
+    //     <h2>${packJSON.name}</h2>
+    //     <p><strong>Description:</strong> ${packJSON.description}</p>
+    //     <p><strong>Price:</strong> $${packJSON.price}</p>
+    //     <p><strong>Pack ID:</strong> ${packID}</p>
+
+    //     <h3>Cards</h3>
+    //     <ul>
+    //     ${packJSON.cards.map(card => `<li>Card Name: ${card}</li>`).join("")}
+    //     </ul>
+    //     <h3>Rarities</h3>
+    //     <ul>
+    //     ${Object.entries(packJSON.rarities)
+    //         .map(([rarity, weight]) => `<li>${rarity}: ${weight}%</li>`)
+    //         .join("")}
+    //     </ul>
+    //     <button onclick="openPack('${packID}', '${packJSON.name}')">buy</button>
+    // </div>
+    // `;
     document.getElementById("mainContent").innerHTML = packHTML;
 }
 
