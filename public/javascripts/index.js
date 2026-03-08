@@ -58,7 +58,7 @@ async function loadPack(packID) {
 `    <div class="packPage">
 
     <div class="packPageLeft">
-
+        <h1> </h1>
     </div>
 
     <div class="packPageRight">
