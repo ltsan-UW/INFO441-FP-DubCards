@@ -105,7 +105,6 @@ async function openPack(packID, packName) {
 }
 
 async function loadInventory() {
-    const uid = 1;
     const userInfoJson = await fetchJSON(`api/user/`);
 
     console.log("Loading inventory...");
@@ -122,16 +121,27 @@ async function loadInventory() {
 
     titleDiv.appendChild(title);
 
+    const invWrapper = document.createElement("div");
     const invCards = document.createElement("div");
     invCards.classList.add("invCards");
+
+    const selectedCards = [];
     const cardsArray = userInfoJson.inventory;
     const cards = await Promise.all(
-        cardsArray.map(card => createCard(card, userInfoJson.favorites))
+        cardsArray.map(card => createCard(card, userInfoJson.favorites, selectedCards))
     );
     cards.forEach(card => invCards.appendChild(card));
 
     inventory.appendChild(titleDiv);
-    inventory.appendChild(invCards);
+    inventory.appendChild(invWrapper);
+    invWrapper.classList.add("invWrapper");
+    invWrapper.appendChild(invCards);
+    const sellButton = document.createElement("button");
+    sellButton.classList.add("sell-button");
+    const sellCards = document.createElement("div");
+    sellCards.classList.add("sellCards");
+    invWrapper.appendChild(sellButton);
+    invWrapper.appendChild(sellCards);
 
     document.getElementById("mainContent").innerHTML = "";
     document.getElementById("mainContent").appendChild(inventory);

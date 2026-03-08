@@ -83,10 +83,10 @@ a {
   margin-bottom: 20px;
 }
 
-.packs, .invCards {
-  display:flex;
+.invWrapper {
+  display: flex;
+  flex-direction: column;
   margin-left:10px;
-  flex: 1;
   overflow-y: auto;
   border-radius: 50px;
 
@@ -98,6 +98,34 @@ a {
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(178, 101, 186, 0.3);
 }
+
+.sell-button {
+  height: 20px;
+  width: 100px;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.sellCards {
+  display:flex;
+  background: rgb(57 22 63);
+  border: 1px solid rgba(178, 101, 186, 0.3);
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.card-small {
+  will-change: transform;
+  height: 80px;
+  width: auto;
+
+}
+
+.packs, .invCards {
+  display:flex;
+  flex-wrap: wrap;
+}
+
 
 .storeTitle, .inventoryTitle {
   margin-left:10px;
@@ -227,6 +255,7 @@ a {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   margin: 20px;
+  z-index: 1;
 }
 
 .card img {
@@ -262,6 +291,10 @@ a {
   border-radius: 20%;
   user-select: none;
   cursor: pointer;
+}
+
+.card-noquantity {
+  filter: grayscale(100%) brightness(0.7);
 }
 
 .invCards {
