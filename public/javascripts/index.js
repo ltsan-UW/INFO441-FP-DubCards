@@ -52,54 +52,108 @@ async function loadStore() {
 }
 
 async function loadPack(packID) {
-    const packJSON = await fetchJSON(`api/store/packs/` + packID)
+    try {
+        const packJSON = await fetchJSON(`api/store/packs/` + packID);
+        const userJSON = await fetchJSON(`api/user/`);
 
-    let packHTML = 
-`    <div class="packPage">
+        const packPage = document.createElement("div");
+        packPage.className = "packPage";
 
-    <div class="packPageLeft">
-        <h1> </h1>
-    </div>
+        // LEFT SIDE
+        const packPageLeft = document.createElement("div");
+        packPageLeft.className = "packPageLeft";
 
-    <div class="packPageRight">
+        const titleWrapper = document.createElement("div");
+        const title = document.createElement("h1");
+        title.textContent = packJSON.name.toUpperCase();
+        titleWrapper.appendChild(title);
 
-    </div>
+        const img = document.createElement("img");
+        img.src = `images/packs/${packJSON._id}.png`;
+
+        const button = document.createElement("button");
+
+        let currency = userJSON.currency;
+        let packPrice = packJSON.price;
+
+        if (currency > packPrice){
+            button.textContent = "BUY";
+            button.onclick = () => openPack(packID, packJSON.name);
+            button.setAttribute("data-tilt", "");
+            button.setAttribute("data-tilt-scale", "1.05");
+            button.classList.add("buyButton");
+        } else {
+            button.textContent = "Not Enough Coins..."
+            button.classList.add("insufficientCurrencyButton");
+        }
+        
+        packPageLeft.appendChild(titleWrapper);
+        packPageLeft.appendChild(img);
+        packPageLeft.appendChild(button);
+
+        // RIGHT SIDE
+        const packPageRight = document.createElement("div");
+        packPageRight.className = "packPageRight";
+
+        const packDesc = document.createElement("div");
+        packDesc.className = "packDesc";
+
+        const descTitle = document.createElement("h1");
+        descTitle.textContent = "DESCRIPTION";
+
+        const descText = document.createElement("p");
+        descText.textContent = packJSON.description;
+
+        packDesc.appendChild(descTitle);
+        packDesc.appendChild(descText);
+
+        const packRarities = document.createElement("div");
+        packRarities.className = "packRarities";
+
+        const rarityTitle = document.createElement("h2");
+        rarityTitle.textContent = "Rarity Chances";
+
+        const rarityList = document.createElement("ul");
+
+        Object.entries(packJSON.rarities).forEach(([rarity, weight]) => {
+            const li = document.createElement("li");
+            li.textContent = `${rarity}: ${weight}%`;
+            rarityList.appendChild(li);
+        });
+
+        packRarities.appendChild(rarityTitle);
+        packRarities.appendChild(rarityList);
+
+        packPageRight.appendChild(packDesc);
+        packPageRight.appendChild(packRarities);
+
+        // ASSEMBLE
+        packPage.appendChild(packPageLeft);
+        packPage.appendChild(packPageRight);
 
 
-    </div>`
+        VanillaTilt.init(button, {
+            max: 0.1,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.4,
+        })
+        
+        document.getElementById("mainContent").innerHTML = "";
+        document.getElementById("mainContent").appendChild(packPage);
+    } catch (error) {
+        throw error;
+    }
     
-    // let packHTML = `
-    // <div class="packPage">
-    //     <button onclick="loadStore()">back</button>
-    //     <h2>${packJSON.name}</h2>
-    //     <p><strong>Description:</strong> ${packJSON.description}</p>
-    //     <p><strong>Price:</strong> $${packJSON.price}</p>
-    //     <p><strong>Pack ID:</strong> ${packID}</p>
-
-    //     <h3>Cards</h3>
-    //     <ul>
-    //     ${packJSON.cards.map(card => `<li>Card Name: ${card}</li>`).join("")}
-    //     </ul>
-    //     <h3>Rarities</h3>
-    //     <ul>
-    //     ${Object.entries(packJSON.rarities)
-    //         .map(([rarity, weight]) => `<li>${rarity}: ${weight}%</li>`)
-    //         .join("")}
-    //     </ul>
-    //     <button onclick="openPack('${packID}', '${packJSON.name}')">buy</button>
-    // </div>
-    // `;
-    document.getElementById("mainContent").innerHTML = packHTML;
 }
 
 async function openPack(packID, packName) {
     try {
-
         let cardsHTML = `
         <div class="packCardsPage">
             <h2>Cards received from ${packName}:</h2>
             <div id="open-pack-div"></div>
-            <button onclick="loadStore()">next</button>
+            <button onclick="loadStore()">Return To Store</button>
         </div>
         `;
         document.getElementById("mainContent").innerHTML = cardsHTML;
@@ -115,7 +169,7 @@ async function openPack(packID, packName) {
         );
         cards.forEach(card => packDiv.appendChild(card));
     } catch (error) {
-        throw (error)
+        throw error;
     }
 }
 

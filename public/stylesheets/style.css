@@ -97,6 +97,7 @@ a {
 .packs, .invCards {
   display:flex;
   flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 
@@ -352,7 +353,7 @@ a {
   align-items: center;
 }
 
-.cardPackSubtext div button{
+.cardPackSubtext div button, .buyButton, .insufficientCurrencyButton, .packCardsPage button {
   width:50%;
   height:40px;
   margin-right:10px;
@@ -364,9 +365,26 @@ a {
   cursor:pointer;
 }
 
+.insufficientCurrencyButton {
+  background: linear-gradient(135deg, #f6e27a, #d4af37, #f6e27a);
+  opacity: 40%;
+  cursor:default;
+}
+
+.packPageLeft button {
+  height:60px;
+  font-size: 30px;
+}
+
 .cardPackSubtext div p{
   width:50%;
 }
+
+/* 
+========================================
+            VIEW PACK PAGE
+========================================
+*/
 
 .packPage {
   flex-direction:row;
@@ -379,6 +397,7 @@ a {
   margin-left:10px;
   margin-top:20px;
   margin-bottom:20px;
+  align-items: center;
 
   flex: 0 0 45%;
 
@@ -391,12 +410,76 @@ a {
   border-radius: 20px;
 }
 
+.packPageLeft img {
+  width: 380px;
+  height: 550px;
+  margin-top: -30px;
+}
+
+.packPageLeft h1, .packPageRight h1{
+  color:white;
+  font-size:40px;
+}
+
+.packPageLeft div {
+  border-bottom: 3px solid rgba(255, 255, 255, 0.5);
+  width:100%;
+  align-items: center;
+  text-align: center;
+}
+
+.packPageRight {
+  color:white;
+}
+
+.packDesc {
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 50%;
+  align-items: center;
+  text-align: center;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.5);
+}
+
+.packDesc p {
+  font-size: 30px;
+
+}
+
+.packRarities {
+  height:50%;
+  align-items: center;
+  text-align: center;
+}
+
+.packRarities h2 {
+  font-size:30px;
+}
+
+.packRarities ul {
+  font-size:40px;
+}
+
 #open-pack-div {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   flex-wrap: wrap;
+  margin-bottom: 30px;
 }
+
+.packCardsPage {
+  width:100%;
+  height:100%;
+  align-items: center;
+  text-align: center;
+  font-size: 35px;
+  color: white;
+}
+
+
+
+
 
 
 
