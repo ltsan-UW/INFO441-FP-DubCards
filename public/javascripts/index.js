@@ -65,7 +65,7 @@ async function loadPack(packID) {
 
         const titleWrapper = document.createElement("div");
         const title = document.createElement("h1");
-        title.textContent = packJSON.name.toUpperCase();
+        title.textContent = packJSON.name.toUpperCase() + " - " + packJSON.price + " Coins";
         titleWrapper.appendChild(title);
 
         const img = document.createElement("img");
@@ -149,25 +149,39 @@ async function loadPack(packID) {
 
 async function openPack(packID, packName) {
     try {
-        let cardsHTML = `
-        <div class="packCardsPage">
-            <h2>Cards received from ${packName}:</h2>
-            <div id="open-pack-div"></div>
-            <button onclick="loadStore()">Return To Store</button>
-        </div>
-        `;
-        document.getElementById("mainContent").innerHTML = cardsHTML;
+        const mainContent = document.getElementById("mainContent");
+        mainContent.innerHTML = "";
+
+        const packCardsPage = document.createElement("div");
+        packCardsPage.className = "packCardsPage";
+
+        const title = document.createElement("h2");
+        title.textContent = `Cards received from ${packName}:`;
+
+        const openPackDiv = document.createElement("div");
+        openPackDiv.id = "open-pack-div";
+
+        const returnButton = document.createElement("button");
+        returnButton.textContent = "Return To Store";
+        returnButton.addEventListener("click", loadStore);
+
+        packCardsPage.appendChild(title);
+        packCardsPage.appendChild(openPackDiv);
+        packCardsPage.appendChild(returnButton);
+
+        mainContent.appendChild(packCardsPage);
 
         const cardsArray = await fetchJSON(`api/store/packs/` + packID, {
             method: "POST",
             body: {}
-        })
+        });
 
-        const packDiv = document.getElementById("open-pack-div");
         const cards = await Promise.all(
             cardsArray.map(card => createCard(card))
         );
-        cards.forEach(card => packDiv.appendChild(card));
+
+        cards.forEach(card => openPackDiv.appendChild(card));
+
     } catch (error) {
         throw error;
     }
