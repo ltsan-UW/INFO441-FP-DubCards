@@ -1,9 +1,17 @@
 async function init() {
     console.log("loading dubcards frontend...");
     await loadAuth()
-    loadInventory(); //for now. should load based on buttons later
-
     return;
+}
+
+async function loadSidebar() {
+    const sidebarHTML = `
+      <button class="side-button" onclick="loadStore()">Pack Store</button>
+      <button class="side-button" onclick="loadInventory()">Inventory</button>
+      <button class="side-button">Trades</button>
+      <button class="side-button">Account</button>`
+    const sidebarElement = document.querySelector(".sidebar");
+    sidebarElement.innerHTML = sidebarHTML;
 }
 
 async function loadStore() {
@@ -86,7 +94,7 @@ async function loadPack(packID) {
             button.textContent = "Not Enough Coins..."
             button.classList.add("insufficientCurrencyButton");
         }
-        
+
         packPageLeft.appendChild(titleWrapper);
         packPageLeft.appendChild(img);
         packPageLeft.appendChild(button);
@@ -138,13 +146,13 @@ async function loadPack(packID) {
             glare: true,
             "max-glare": 0.4,
         })
-        
+
         document.getElementById("mainContent").innerHTML = "";
         document.getElementById("mainContent").appendChild(packPage);
     } catch (error) {
         throw error;
     }
-    
+
 }
 
 async function openPack(packID, packName) {

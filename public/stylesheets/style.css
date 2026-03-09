@@ -80,6 +80,15 @@ a {
   flex-direction: column;
 }
 
+.not-logged-in-div {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 40pt;
+  margin-top: 50px;
+}
+
 /*
 ========================================
         STORE/INVENTORY STYLES
@@ -380,7 +389,7 @@ a {
   width:50%;
 }
 
-/* 
+/*
 ========================================
             VIEW PACK PAGE
 ========================================
