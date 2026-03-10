@@ -3,19 +3,37 @@ var router = express.Router();
 
 import * as userController from '../controllers/user.controller.js';
 
-// GET /user - Allows the logged in user to see their own information; what cards they have, their trade requests and their favorites list.
+// GET /user - Allows the logged in user to see their own information
 router.get('/', userController.getUser);
 
-// GET /user/:username - Allows users to see their information; what cards they have, their trade requests and their favorites list.
-router.get('/:username', userController.getUser);
-
-// POST /user/sell - Allows users to sell cards that they have.
+// POST /user/sell - Allows users to sell cards that they have
 router.post('/sell', userController.sellCards);
 
-// POST /user/favorites - Allows users to add cards to their favorites list.
+// POST /user/favorites - Allows users to add cards to their favorites list
 router.post('/favorites', userController.postFavorites);
 
-// POST /user/trade - Allows users to send or edit trade requests to another user.
+// POST /user/trade - Allows users to send a trade request to another user
 router.post('/trade', userController.postTrades);
+
+// PATCH /user/trade/:tradeID - Accept, reject, or cancel a trade
+router.patch('/trade/:tradeID', userController.updateTrade);
+
+// GET /user/friends - Get the logged in user's friends list
+router.get('/friends', userController.getFriends);
+
+// POST /user/friends/request - Send a friend request
+router.post('/friends/request', userController.sendFriendRequest);
+
+// PATCH /user/friends/request - Accept or reject a friend request
+router.patch('/friends/request', userController.updateFriendRequest);
+
+// DELETE /user/friends - Remove a friend
+router.delete('/friends', userController.removeFriend);
+
+// GET /user/trades - View all incoming and outgoing trades
+router.get('/trades', userController.getTrades);
+
+// GET /user/:username - Allows users to see another user's information 
+router.get('/:username', userController.getUserByUsername);
 
 export default router;
