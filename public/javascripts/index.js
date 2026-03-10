@@ -678,28 +678,46 @@ async function loadSendTrade(receiverUsername) {
     title.textContent = `Send Trade to ${receiverUsername}`;
     page.appendChild(title);
 
+    // helper to build a card row with a quantity input
+    function createCardRow(card, cardsMap) {
+        const row = document.createElement("div");
+        row.classList.add("trade-card-row");
+
+        const label = document.createElement("span");
+        label.textContent = `Card ${card.cardID} - ${card.name} (you have x${card.quantity})`;
+        row.appendChild(label);
+
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = 0;
+        input.max = card.quantity;
+        input.value = 0;
+        input.classList.add("trade-quantity-input");
+        input.oninput = () => {
+            // clamp value between 0 and max quantity
+            let val = parseInt(input.value) || 0;
+            if (val < 0) val = 0;
+            if (val > card.quantity) val = card.quantity;
+            input.value = val;
+            cardsMap[card.cardID] = val;
+        };
+        row.appendChild(input);
+
+        return row;
+    }
+
     // your cards
     const yourSection = document.createElement("div");
     yourSection.classList.add("trade-card-section");
 
     const yourTitle = document.createElement("h3");
-    yourTitle.textContent = "Your Cards (click to offer)";
+    yourTitle.textContent = "Your Cards (enter how many to offer)";
     yourSection.appendChild(yourTitle);
 
-    const senderCards = [];
+    const senderCardsMap = {}; // { cardID: quantity }
     userJson.inventory.forEach(card => {
-        const btn = document.createElement("button");
-        btn.textContent = `Card ${card.cardID} - ${card.name} x${card.quantity}`;
-        btn.classList.add("trade-card-btn");
-        btn.onclick = () => {
-            btn.classList.toggle("selected");
-            if (senderCards.includes(card.cardID)) {
-                senderCards.splice(senderCards.indexOf(card.cardID), 1);
-            } else {
-                senderCards.push(card.cardID);
-            }
-        };
-        yourSection.appendChild(btn);
+        senderCardsMap[card.cardID] = 0;
+        yourSection.appendChild(createCardRow(card, senderCardsMap));
     });
     page.appendChild(yourSection);
 
@@ -708,23 +726,13 @@ async function loadSendTrade(receiverUsername) {
     theirSection.classList.add("trade-card-section");
 
     const theirTitle = document.createElement("h3");
-    theirTitle.textContent = `${receiverUsername}'s Cards (click to request)`;
+    theirTitle.textContent = `${receiverUsername}'s Cards (enter how many to request)`;
     theirSection.appendChild(theirTitle);
 
-    const receiverCards = [];
+    const receiverCardsMap = {}; // { cardID: quantity }
     receiverJson.inventory.forEach(card => {
-        const btn = document.createElement("button");
-        btn.textContent = `Card ${card.cardID} - ${card.name} x${card.quantity}`;
-        btn.classList.add("trade-card-btn");
-        btn.onclick = () => {
-            btn.classList.toggle("selected");
-            if (receiverCards.includes(card.cardID)) {
-                receiverCards.splice(receiverCards.indexOf(card.cardID), 1);
-            } else {
-                receiverCards.push(card.cardID);
-            }
-        };
-        theirSection.appendChild(btn);
+        receiverCardsMap[card.cardID] = 0;
+        theirSection.appendChild(createCardRow(card, receiverCardsMap));
     });
     page.appendChild(theirSection);
 
@@ -734,6 +742,18 @@ async function loadSendTrade(receiverUsername) {
     const sendBtn = document.createElement("button");
     sendBtn.textContent = "Send Trade Request";
     sendBtn.onclick = async () => {
+        // convert maps to arrays of cardIDs, repeating for quantity
+        const senderCards = Object.entries(senderCardsMap)
+            .flatMap(([cardID, qty]) => Array(qty).fill(Number(cardID)));
+
+        const receiverCards = Object.entries(receiverCardsMap)
+            .flatMap(([cardID, qty]) => Array(qty).fill(Number(cardID)));
+
+        if (senderCards.length === 0 && receiverCards.length === 0) {
+            status.textContent = "Please select at least one card to trade.";
+            return;
+        }
+
         try {
             await fetchJSON("api/user/trade", {
                 method: "POST",

@@ -14,9 +14,8 @@ const tradeSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-tradeSchema.pre('save', function (next) {
+tradeSchema.pre('save', function () {
   this.updatedAt = Date.now();
-  next();
 });
 
 export default mongoose.model('Trade', tradeSchema);
