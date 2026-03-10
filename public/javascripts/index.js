@@ -8,7 +8,8 @@ async function loadSidebar() {
     const sidebarHTML = `
       <button class="side-button" onclick="loadStore()">Pack Store</button>
       <button class="side-button" onclick="loadInventory()">Inventory</button>
-      <button class="side-button">Trades</button>
+      <button class="side-button" onclick="loadTrades()">Trades</button>
+      <button class="side-button" onclick="loadFriends()">Friends</button>
       <button class="side-button" onclick="loadAccountPage()">Account</button>`
     const sidebarElement = document.querySelector(".sidebar");
     sidebarElement.innerHTML = sidebarHTML;
@@ -58,7 +59,6 @@ async function loadAccountPage() {
             accountInfoDiv.appendChild(div);
         });
 
-
         mainContent.appendChild(page);
     } catch (err) {
         throw error;
@@ -104,7 +104,7 @@ async function loadStore() {
 
     mainContent.appendChild(store);
 
-    //for each in the json, add a pack as a child to the packs container!
+    //for each in the json, add a pack as a child to the packs container
     storeJson.forEach(packData => {
         packsContainer.appendChild(createPack(packData));
     });
@@ -190,7 +190,6 @@ async function loadPack(packID) {
         packPage.appendChild(packPageLeft);
         packPage.appendChild(packPageRight);
 
-
         VanillaTilt.init(button, {
             max: 0.1,
             speed: 400,
@@ -203,7 +202,6 @@ async function loadPack(packID) {
     } catch (error) {
         throw error;
     }
-
 }
 
 async function openPack(packID, packName) {
@@ -344,4 +342,338 @@ async function loadInventory() {
     document.getElementById("mainContent").innerHTML = "";
     document.getElementById("mainContent").appendChild(inventory);
     return;
+}
+
+async function loadFriends() {
+    const mainContent = document.getElementById("mainContent");
+    mainContent.innerHTML = "";
+
+    const page = document.createElement("div");
+    page.classList.add("friendsPage");
+
+    const title = document.createElement("h2");
+    title.textContent = "Friends";
+    page.appendChild(title);
+
+    // send friend request section
+    const requestSection = document.createElement("div");
+    requestSection.classList.add("friends-section");
+
+    const requestTitle = document.createElement("h3");
+    requestTitle.textContent = "Add a Friend";
+    requestSection.appendChild(requestTitle);
+
+    const requestInput = document.createElement("input");
+    requestInput.type = "text";
+    requestInput.placeholder = "Enter username...";
+    requestSection.appendChild(requestInput);
+
+    const requestButton = document.createElement("button");
+    requestButton.textContent = "Send Request";
+    requestButton.onclick = async () => {
+        try {
+            const result = await fetchJSON("api/user/friends/request", {
+                method: "POST",
+                body: { username: requestInput.value }
+            });
+            requestStatus.textContent = result.message;
+            requestInput.value = "";
+        } catch (error) {
+            requestStatus.textContent = "Error sending request.";
+        }
+    };
+    requestSection.appendChild(requestButton);
+
+    const requestStatus = document.createElement("p");
+    requestSection.appendChild(requestStatus);
+    page.appendChild(requestSection);
+
+    // incoming friend requests section
+    const friendsJson = await fetchJSON("api/user/friends");
+
+    const incomingSection = document.createElement("div");
+    incomingSection.classList.add("friends-section");
+
+    const incomingTitle = document.createElement("h3");
+    incomingTitle.textContent = "Incoming Friend Requests";
+    incomingSection.appendChild(incomingTitle);
+
+    if (friendsJson.friendRequests.length === 0) {
+        const none = document.createElement("p");
+        none.textContent = "No pending friend requests.";
+        incomingSection.appendChild(none);
+    } else {
+        friendsJson.friendRequests.forEach(username => {
+            const row = document.createElement("div");
+            row.classList.add("friend-row");
+
+            const name = document.createElement("span");
+            name.textContent = username;
+            row.appendChild(name);
+
+            const acceptBtn = document.createElement("button");
+            acceptBtn.textContent = "Accept";
+            acceptBtn.onclick = async () => {
+                await fetchJSON("api/user/friends/request", {
+                    method: "PATCH",
+                    body: { username, action: "accepted" }
+                });
+                loadFriends();
+            };
+
+            const rejectBtn = document.createElement("button");
+            rejectBtn.textContent = "Reject";
+            rejectBtn.onclick = async () => {
+                await fetchJSON("api/user/friends/request", {
+                    method: "PATCH",
+                    body: { username, action: "rejected" }
+                });
+                loadFriends();
+            };
+
+            row.appendChild(acceptBtn);
+            row.appendChild(rejectBtn);
+            incomingSection.appendChild(row);
+        });
+    }
+    page.appendChild(incomingSection);
+
+    // current friends section
+    const currentSection = document.createElement("div");
+    currentSection.classList.add("friends-section");
+
+    const currentTitle = document.createElement("h3");
+    currentTitle.textContent = "Your Friends";
+    currentSection.appendChild(currentTitle);
+
+    if (friendsJson.friends.length === 0) {
+        const none = document.createElement("p");
+        none.textContent = "No friends yet.";
+        currentSection.appendChild(none);
+    } else {
+        friendsJson.friends.forEach(username => {
+            const row = document.createElement("div");
+            row.classList.add("friend-row");
+
+            const name = document.createElement("span");
+            name.textContent = username;
+            row.appendChild(name);
+
+            const removeBtn = document.createElement("button");
+            removeBtn.textContent = "Remove";
+            removeBtn.onclick = async () => {
+                await fetchJSON("api/user/friends", {
+                    method: "DELETE",
+                    body: { username }
+                });
+                loadFriends();
+            };
+
+            const tradeBtn = document.createElement("button");
+            tradeBtn.textContent = "Trade";
+            tradeBtn.onclick = () => loadSendTrade(username);
+            row.appendChild(tradeBtn);
+            row.appendChild(removeBtn);
+            currentSection.appendChild(row);
+        });
+    }
+    page.appendChild(currentSection);
+
+    mainContent.appendChild(page);
+}
+
+async function loadTrades() {
+    const mainContent = document.getElementById("mainContent");
+    mainContent.innerHTML = "";
+
+    const page = document.createElement("div");
+    page.classList.add("tradesPage");
+
+    const title = document.createElement("h2");
+    title.textContent = "Trades";
+    page.appendChild(title);
+
+    const tradesJson = await fetchJSON("api/user/trades");
+
+    // incoming trades
+    const incomingSection = document.createElement("div");
+    incomingSection.classList.add("trades-section");
+
+    const incomingTitle = document.createElement("h3");
+    incomingTitle.textContent = "Incoming Trade Requests";
+    incomingSection.appendChild(incomingTitle);
+
+    if (tradesJson.incoming.length === 0) {
+        const none = document.createElement("p");
+        none.textContent = "No incoming trades.";
+        incomingSection.appendChild(none);
+    } else {
+        tradesJson.incoming.forEach(trade => {
+            const row = document.createElement("div");
+            row.classList.add("trade-row");
+
+            const info = document.createElement("p");
+            info.textContent = `From ${trade.senderUsername} — They offer cards: [${trade.senderCards.join(", ")}] for your cards: [${trade.receiverCards.join(", ")}] — Status: ${trade.status}`;
+            row.appendChild(info);
+
+            if (trade.status === "pending") {
+                const acceptBtn = document.createElement("button");
+                acceptBtn.textContent = "Accept";
+                acceptBtn.onclick = async () => {
+                    await fetchJSON(`api/user/trade/${trade._id}`, {
+                        method: "PATCH",
+                        body: { status: "accepted" }
+                    });
+                    loadTrades();
+                };
+
+                const rejectBtn = document.createElement("button");
+                rejectBtn.textContent = "Reject";
+                rejectBtn.onclick = async () => {
+                    await fetchJSON(`api/user/trade/${trade._id}`, {
+                        method: "PATCH",
+                        body: { status: "rejected" }
+                    });
+                    loadTrades();
+                };
+
+                row.appendChild(acceptBtn);
+                row.appendChild(rejectBtn);
+            }
+
+            incomingSection.appendChild(row);
+        });
+    }
+    page.appendChild(incomingSection);
+
+    // outgoing trades
+    const outgoingSection = document.createElement("div");
+    outgoingSection.classList.add("trades-section");
+
+    const outgoingTitle = document.createElement("h3");
+    outgoingTitle.textContent = "Outgoing Trade Requests";
+    outgoingSection.appendChild(outgoingTitle);
+
+    if (tradesJson.outgoing.length === 0) {
+        const none = document.createElement("p");
+        none.textContent = "No outgoing trades.";
+        outgoingSection.appendChild(none);
+    } else {
+        tradesJson.outgoing.forEach(trade => {
+            const row = document.createElement("div");
+            row.classList.add("trade-row");
+
+            const info = document.createElement("p");
+            info.textContent = `To ${trade.receiverUsername} — You offered: [${trade.senderCards.join(", ")}] for their cards: [${trade.receiverCards.join(", ")}] — Status: ${trade.status}`;
+            row.appendChild(info);
+
+            if (trade.status === "pending") {
+                const cancelBtn = document.createElement("button");
+                cancelBtn.textContent = "Cancel";
+                cancelBtn.onclick = async () => {
+                    await fetchJSON(`api/user/trade/${trade._id}`, {
+                        method: "PATCH",
+                        body: { status: "cancelled" }
+                    });
+                    loadTrades();
+                };
+                row.appendChild(cancelBtn);
+            }
+
+            outgoingSection.appendChild(row);
+        });
+    }
+    page.appendChild(outgoingSection);
+
+    mainContent.appendChild(page);
+}
+
+async function loadSendTrade(receiverUsername) {
+    const mainContent = document.getElementById("mainContent");
+    mainContent.innerHTML = "";
+
+    const userJson = await fetchJSON("api/user/");
+    const receiverJson = await fetchJSON(`api/user/${receiverUsername}`);
+
+    const page = document.createElement("div");
+    page.classList.add("sendTradePage");
+
+    const title = document.createElement("h2");
+    title.textContent = `Send Trade to ${receiverUsername}`;
+    page.appendChild(title);
+
+    // your cards
+    const yourSection = document.createElement("div");
+    yourSection.classList.add("trade-card-section");
+
+    const yourTitle = document.createElement("h3");
+    yourTitle.textContent = "Your Cards (click to offer)";
+    yourSection.appendChild(yourTitle);
+
+    const senderCards = [];
+    userJson.inventory.forEach(card => {
+        const btn = document.createElement("button");
+        btn.textContent = `Card ${card.cardID} - ${card.name} x${card.quantity}`;
+        btn.classList.add("trade-card-btn");
+        btn.onclick = () => {
+            btn.classList.toggle("selected");
+            if (senderCards.includes(card.cardID)) {
+                senderCards.splice(senderCards.indexOf(card.cardID), 1);
+            } else {
+                senderCards.push(card.cardID);
+            }
+        };
+        yourSection.appendChild(btn);
+    });
+    page.appendChild(yourSection);
+
+    // their cards
+    const theirSection = document.createElement("div");
+    theirSection.classList.add("trade-card-section");
+
+    const theirTitle = document.createElement("h3");
+    theirTitle.textContent = `${receiverUsername}'s Cards (click to request)`;
+    theirSection.appendChild(theirTitle);
+
+    const receiverCards = [];
+    receiverJson.inventory.forEach(card => {
+        const btn = document.createElement("button");
+        btn.textContent = `Card ${card.cardID} - ${card.name} x${card.quantity}`;
+        btn.classList.add("trade-card-btn");
+        btn.onclick = () => {
+            btn.classList.toggle("selected");
+            if (receiverCards.includes(card.cardID)) {
+                receiverCards.splice(receiverCards.indexOf(card.cardID), 1);
+            } else {
+                receiverCards.push(card.cardID);
+            }
+        };
+        theirSection.appendChild(btn);
+    });
+    page.appendChild(theirSection);
+
+    const status = document.createElement("p");
+    page.appendChild(status);
+
+    const sendBtn = document.createElement("button");
+    sendBtn.textContent = "Send Trade Request";
+    sendBtn.onclick = async () => {
+        try {
+            await fetchJSON("api/user/trade", {
+                method: "POST",
+                body: { receiverUsername, senderCards, receiverCards }
+            });
+            status.textContent = "Trade request sent!";
+        } catch (error) {
+            status.textContent = "Error sending trade.";
+        }
+    };
+    page.appendChild(sendBtn);
+
+    const backBtn = document.createElement("button");
+    backBtn.textContent = "Back to Friends";
+    backBtn.onclick = loadFriends;
+    page.appendChild(backBtn);
+
+    mainContent.appendChild(page);
 }

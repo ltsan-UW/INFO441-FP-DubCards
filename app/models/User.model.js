@@ -18,7 +18,9 @@ const userSchema = new mongoose.Schema({
       quantity: { type: Number, default: 1 },
     },
   ],
-  favorites: { type: [Number], default: []}
+  favorites: { type: [Number], default: []},
+  friends: { type: [String], default: [] },
+  friendRequests: { type: [String], default: [] },
 });
 
 export default mongoose.model('User', userSchema);
