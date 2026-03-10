@@ -9,9 +9,60 @@ async function loadSidebar() {
       <button class="side-button" onclick="loadStore()">Pack Store</button>
       <button class="side-button" onclick="loadInventory()">Inventory</button>
       <button class="side-button">Trades</button>
-      <button class="side-button">Account</button>`
+      <button class="side-button" onclick="loadAccountPage()">Account</button>`
     const sidebarElement = document.querySelector(".sidebar");
     sidebarElement.innerHTML = sidebarHTML;
+}
+
+async function loadAccountPage() {
+    try {
+        const userJson = await fetchJSON(`api/user/`);
+
+        //get maincontent div
+        const mainContent = document.getElementById("mainContent");
+        mainContent.innerHTML = "";
+
+        //make elements of everything in the store below:
+        const page = document.createElement("div");
+        page.classList.add("accountPage");
+
+        const accountTitle = document.createElement("div");
+        accountTitle.classList.add("accountTitle");
+        const title = document.createElement("h2");
+        title.textContent = "Your Account";
+        accountTitle.appendChild(title);
+        page.appendChild(accountTitle);
+
+        const accountInfoDiv = document.createElement("div");
+        accountInfoDiv.classList.add("account-info-div")
+        page.appendChild(accountInfoDiv);
+
+        let totalCards = 0;
+        userJson.inventory.forEach((card) => {
+            totalCards += card.quantity;
+        })
+
+        const fields = {
+            Username: userJson.username,
+            Email: userJson.email,
+            Currency: userJson.currency,
+            "Total Cards": totalCards,
+            Favorites: userJson.favorites.length,
+            "Date Joined": Date(userJson.createdAt).toLocaleString()
+        };
+
+        Object.entries(fields).forEach(([label, value]) => {
+            const div = document.createElement("div");
+            div.textContent = `${label}: ${value}`;
+            div.classList.add("account-stat-div");
+            accountInfoDiv.appendChild(div);
+        });
+
+
+        mainContent.appendChild(page);
+    } catch (err) {
+        throw error;
+    }
 }
 
 async function loadStore() {
@@ -84,7 +135,7 @@ async function loadPack(packID) {
         let currency = userJSON.currency;
         let packPrice = packJSON.price;
 
-        if (currency > packPrice){
+        if (currency > packPrice) {
             button.textContent = "BUY";
             button.onclick = () => openPack(packID, packJSON.name);
             button.setAttribute("data-tilt", "");
@@ -269,7 +320,7 @@ async function loadInventory() {
     sellButton.innerText = "Sell"
     sellButton.onclick = () => {
         sellCards.classList.toggle("hidden");
-        if(Object.keys(selectedCards).length !== 0) {
+        if (Object.keys(selectedCards).length !== 0) {
             sellCards.querySelectorAll("img").forEach(img => img.remove());
             updateSellAmmount(null, null, true);
             userInfoJson.inventory.forEach(cardData => {

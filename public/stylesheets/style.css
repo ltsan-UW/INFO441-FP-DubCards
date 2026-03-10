@@ -95,7 +95,7 @@ a {
 ========================================
 */
 
-.store, .inventory, .packPage {
+.store, .inventory, .packPage, .accountPage {
   display: flex;
   flex-direction: column;
   height:100%;
@@ -110,7 +110,7 @@ a {
 }
 
 
-.storeTitle, .inventoryTitle {
+.storeTitle, .inventoryTitle, .accountTitle {
   margin-left:10px;
   margin-top:20px;
   margin-bottom:20px;
@@ -156,7 +156,7 @@ a {
   margin-left:10px;
 }
 
-.inventory h2 {
+.inventory h2, .accountTitle h2 {
   font-size:40px;
   color:white;
   margin-left:10px;
@@ -485,6 +485,38 @@ a {
   font-size: 35px;
   color: white;
 }
+
+/*
+========================================
+          ACCOUNT INFO PAGE
+========================================
+*/
+
+.account-info-div {
+  height: 400px;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 16pt;
+  color: white;
+
+
+  /*Glass effect */
+  background: rgba(178, 101, 186, 0.22);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(178, 101, 186, 0.3);
+  border-radius: 20px;
+}
+
+.account-info-div div {
+  margin: 5px
+}
+
+
 
 /*
 ========================================
