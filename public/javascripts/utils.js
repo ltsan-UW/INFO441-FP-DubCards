@@ -82,3 +82,12 @@ function createCardOverlay(card) {
         card.appendChild(overlay);
     } else overlay.remove();
 }
+
+// Helper function for sidebar to keep clicked button darker than the others
+function setActiveButton(clickedButton) {
+  document.querySelectorAll(".side-button").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  clickedButton.classList.add("active");
+}

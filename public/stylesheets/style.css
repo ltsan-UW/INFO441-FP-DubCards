@@ -67,11 +67,29 @@ a {
 }
 
 .side-button {
-  font-size:19px;
+  font-size:18px;
   height:6rem;
-  margin-top:40px;
-  width:70%;
+  width:100%;
+  color:white;
+  font-weight: bold;
+  cursor:pointer
 }
+
+.side-button:hover, .side-button.active {
+  background-color:#28102c;
+}
+
+.side-button img {
+  margin-top:10px;
+  height:55%;
+  width:50%;
+}
+
+.side-button p {
+  margin-bottom: 20px;
+  margin-top:5px;
+}
+
 
 #maincontent {
   flex-grow: 1;
@@ -109,7 +127,7 @@ a {
 }
 
 .packs {
-  margin-left:10px;
+  margin-left:20px;
   flex: 1;
   overflow-y: auto;
   border-radius: 50px;
@@ -125,7 +143,7 @@ a {
 
 
 .storeTitle, .inventoryTitle, .accountTitle {
-  margin-left:10px;
+  margin-left:20px;
   margin-top:20px;
   margin-bottom:20px;
   padding-left:20px;
@@ -153,7 +171,7 @@ a {
 .invWrapper {
   display: flex;
   flex-direction: column;
-  margin-left:10px;
+  margin-left:20px;
   overflow-y: auto;
   border-radius: 50px;
 
@@ -167,7 +185,7 @@ a {
 }
 
 .invCards {
-  margin-left:10px;
+  margin-left:20px;
 }
 
 .inventory h2, .accountTitle h2 {
@@ -312,6 +330,7 @@ a {
 }
 
 .currency {
+  height:100%;
   align-items: center;
   text-align:center;
   display:flex;
@@ -319,8 +338,15 @@ a {
 }
 
 .currency p {
-  font-size:30px;
+  font-size:40px;
   color:white;
+}
+
+.currency img {
+  width: 60px;
+  height: 60px;
+  margin-top:5px;
+  object-fit: contain;
 }
 
 .cardPack {
@@ -417,7 +443,7 @@ a {
 .packPageLeft, .packPageRight {
   display:flex;
   flex-direction: column;
-  margin-left:10px;
+  margin-left:20px;
   margin-top:20px;
   margin-bottom:20px;
   align-items: center;
@@ -453,6 +479,30 @@ a {
 
 .packPageRight {
   color:white;
+}
+
+.packPriceDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.packPriceDiv img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  flex-shrink: 0;
+  margin:0px;
+  margin-bottom:15px;
+}
+
+.packPriceDiv h2 {
+  font-size:50px;
+  color:white;
+  margin:0px;
+  margin-bottom:20px;
 }
 
 .packDesc {
@@ -508,7 +558,7 @@ a {
 
 .account-info-div {
   height: 400px;
-  margin-left: 10px;
+  margin-left: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;

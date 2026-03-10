@@ -1,20 +1,73 @@
+// ===== MAIN IMPLEMENTATION NOTES: =====
+// The index.html contains a main content div. This div is where
+// all of DUBCARDS' content is displayed, while the navbar and  
+// sidebar remain constant for the most part. We use dom elements 
+// to update what is displayed on the main content div utilizing
+// onClick() functions
+
+
+// ===== Initialization Function! =====
+// Runs load auth to check whether a user is logged in
+// before proceeding. 
 async function init() {
     console.log("loading dubcards frontend...");
     await loadAuth()
     return;
 }
 
+// ===== Loads sidebar =====
+// Loads the content of the sidebar, includes
+// a convenient function to make sidebar buttons on 
+// the dom
 async function loadSidebar() {
-    const sidebarHTML = `
-      <button class="side-button" onclick="loadStore()">Pack Store</button>
-      <button class="side-button" onclick="loadInventory()">Inventory</button>
-      <button class="side-button" onclick="loadTrades()">Trades</button>
-      <button class="side-button" onclick="loadFriends()">Friends</button>
-      <button class="side-button" onclick="loadAccountPage()">Account</button>`
-    const sidebarElement = document.querySelector(".sidebar");
-    sidebarElement.innerHTML = sidebarHTML;
+
+  const sidebarElement = document.querySelector(".sidebar");
+  sidebarElement.innerHTML = "";
+
+  function createSidebarButton(imgSrc, text, clickFunction) {
+
+    const buttonDiv = document.createElement("div");
+    buttonDiv.classList.add("side-button");
+
+    buttonDiv.addEventListener("click", () => {
+        setActiveButton(buttonDiv);
+        clickFunction();
+    });
+
+    const img = document.createElement("img");
+    img.src = imgSrc;
+
+    const label = document.createElement("p");
+    label.textContent = text;
+
+    buttonDiv.appendChild(img);
+    buttonDiv.appendChild(label);
+
+    return buttonDiv;
+  }
+
+  sidebarElement.appendChild(
+    createSidebarButton("images/graphics/dubcardsStore.png", "Pack Store", loadStore)
+  );
+
+  sidebarElement.appendChild(
+    createSidebarButton("images/graphics/dubcardsInventory.png", "Inventory", loadInventory)
+  );
+
+  sidebarElement.appendChild(
+    createSidebarButton("images/graphics/dubcardsTrade.png", "Trades", loadTrades)
+  );
+
+  sidebarElement.appendChild(
+    createSidebarButton("images/graphics/dubcardsFriends.png", "Friends", loadFriends)
+  );
+
+  sidebarElement.appendChild(
+    createSidebarButton("images/graphics/dubcardsUser.png", "Account", loadAccountPage)
+  );
 }
 
+// ===== Loads account page display account information =====
 async function loadAccountPage() {
     try {
         const userJson = await fetchJSON(`api/user/`);
@@ -65,6 +118,7 @@ async function loadAccountPage() {
     }
 }
 
+// ===== Loads Store Page displaying buyable packs =====
 async function loadStore() {
     const storeJson = await fetchJSON(`api/store/packs`);
     const userJson = await fetchJSON(`api/user/`);
@@ -88,10 +142,13 @@ async function loadStore() {
     const currencyDiv = document.createElement("div");
     currencyDiv.classList.add("currency");
 
+    const dubcoinImg = document.createElement("img");
+    dubcoinImg.src = `images/graphics/dubcoin.png`;
     const currencyText = document.createElement("p");
     currencyText.textContent = currency;
 
     currencyDiv.appendChild(currencyText);
+    currencyDiv.appendChild(dubcoinImg);
 
     storeTitle.appendChild(title);
     storeTitle.appendChild(currencyDiv);
@@ -110,6 +167,7 @@ async function loadStore() {
     });
 }
 
+// ===== Loads the pack info page when a user views from the store =====
 async function loadPack(packID) {
     try {
         const packJSON = await fetchJSON(`api/store/packs/` + packID);
@@ -124,7 +182,7 @@ async function loadPack(packID) {
 
         const titleWrapper = document.createElement("div");
         const title = document.createElement("h1");
-        title.textContent = packJSON.name.toUpperCase() + " - " + packJSON.price + " Coins";
+        title.textContent = packJSON.name.toUpperCase();
         titleWrapper.appendChild(title);
 
         const img = document.createElement("img");
@@ -149,6 +207,19 @@ async function loadPack(packID) {
         packPageLeft.appendChild(titleWrapper);
         packPageLeft.appendChild(img);
         packPageLeft.appendChild(button);
+
+        const priceDiv = document.createElement("div");
+        const priceText = document.createElement("h2");
+        const dubcoin = document.createElement("img");
+
+        priceDiv.classList.add("packPriceDiv");
+        priceText.textContent = packJSON.price;
+        dubcoin.src = `images/graphics/dubcoin.png`;
+
+        priceDiv.appendChild(priceText);
+        priceDiv.appendChild(dubcoin);
+
+        packPageLeft.appendChild(priceDiv);
 
         // RIGHT SIDE
         const packPageRight = document.createElement("div");
@@ -204,6 +275,7 @@ async function loadPack(packID) {
     }
 }
 
+// ===== Loads the page w/ received cards when a user buys a pack =====
 async function openPack(packID, packName) {
     try {
         const mainContent = document.getElementById("mainContent");
@@ -244,6 +316,7 @@ async function openPack(packID, packName) {
     }
 }
 
+// ===== Loads inventory showing all cards user owns =====
 async function loadInventory() {
     const userInfoJson = await fetchJSON(`api/user/`);
 
@@ -344,6 +417,7 @@ async function loadInventory() {
     return;
 }
 
+// ===== Loads friends screen =====
 async function loadFriends() {
     const mainContent = document.getElementById("mainContent");
     mainContent.innerHTML = "";
@@ -482,6 +556,7 @@ async function loadFriends() {
     mainContent.appendChild(page);
 }
 
+// ===== Loads trade screen showing outgoing/incoming trade offers =====
 async function loadTrades() {
     const mainContent = document.getElementById("mainContent");
     mainContent.innerHTML = "";
@@ -588,6 +663,7 @@ async function loadTrades() {
     mainContent.appendChild(page);
 }
 
+// ===== Loads screen when sending a trade =====
 async function loadSendTrade(receiverUsername) {
     const mainContent = document.getElementById("mainContent");
     mainContent.innerHTML = "";
