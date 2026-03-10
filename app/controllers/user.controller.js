@@ -269,6 +269,7 @@ export async function postTrades(req, res) {
     await trade.save();
     res.json({ status: "success", trade });
   } catch (error) {
+    console.log(error) 
     res.status(500).json({ status: "error", error });
   }
 }
