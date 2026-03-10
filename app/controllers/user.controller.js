@@ -324,7 +324,7 @@ export async function updateTrade(req, res) {
         if (receiverHasCard !== -1) {
           receiver.inventory[receiverHasCard].quantity += 1;
         } else {
-          receiver.inventory.push({ cardID: card.cardID, name: card.name, quantity: 1 });
+          receiver.inventory.push({ cardID: card.cardID, name: card.name, rarity: card.rarity, quantity: 1 });
         }
       }
 
@@ -344,7 +344,7 @@ export async function updateTrade(req, res) {
         if (senderHasCard !== -1) {
           sender.inventory[senderHasCard].quantity += 1;
         } else {
-          sender.inventory.push({ cardID: card.cardID, name: card.name, quantity: 1 });
+          sender.inventory.push({ cardID: card.cardID, name: card.name, rarity: card.rarity, quantity: 1 });
         }
       }
 
@@ -356,6 +356,7 @@ export async function updateTrade(req, res) {
     await trade.save();
     res.json({ status: "success", trade });
   } catch (error) {
+    console.log(error) 
     res.status(500).json({ status: "error", error });
   }
 }
