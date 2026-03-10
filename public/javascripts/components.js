@@ -95,7 +95,6 @@ async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
   smallCard.classList.add("card-small");
   smallCard.style.zIndex = 1;
   smallCard.src = card.querySelector("img").src;
-  smallCard.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(8deg)`;
 
   const target = document.querySelector(".sellCards");
   target.appendChild(smallCard);
@@ -104,11 +103,12 @@ async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
   const dx = first.left - last.left + first.width / 2 - last.width / 2;
   const dy = first.top - last.top + first.height / 2 - last.height / 2;
   const scale = (first.width - 10) / last.width;
-
   requestAnimationFrame(() => {
     smallCard.style.transition = "transform 0.4s ease";
     smallCard.style.transform = "";
   });
+  smallCard.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(8deg)`;
+
 
   smallCard.addEventListener("click", () => {handleSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv)});
 }

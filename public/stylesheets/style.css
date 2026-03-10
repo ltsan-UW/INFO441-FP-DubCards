@@ -113,7 +113,7 @@ a {
 ========================================
 */
 
-.store, .inventory, .packPage, .accountPage {
+.store, .inventory, .packPage, .accountPage, .tradesPage, .friendsPage {
   display: flex;
   flex-direction: column;
   height:100%;
@@ -142,7 +142,7 @@ a {
 }
 
 
-.storeTitle, .inventoryTitle, .accountTitle {
+.storeTitle, .inventoryTitle {
   margin-left:20px;
   margin-top:20px;
   margin-bottom:20px;
@@ -161,6 +161,7 @@ a {
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(178, 101, 186, 0.3);
 }
+
 
 /*
 ========================================
@@ -188,7 +189,7 @@ a {
   margin-left:20px;
 }
 
-.inventory h2, .accountTitle h2 {
+.inventory h2 {
   font-size:40px;
   color:white;
   margin-left:10px;
@@ -552,12 +553,30 @@ a {
 
 /*
 ========================================
-          ACCOUNT INFO PAGE
+    TRADES, FRIENDS, ACCOUNT PAGES
 ========================================
 */
 
-.account-info-div {
-  height: 400px;
+.tradesPage h2, .friendsPage h2, .accountPage h2 {
+  margin: 30px 0px 30px 20px;
+  padding: 20px 30px 25px 30px;
+  display:flex;
+  text-align: left;
+  border-radius: 40px;
+  align-items:center;
+  font-size: 30pt;
+  color: white;
+
+  /*Glass effect */
+  background: rgba(178, 101, 186, 0.22);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(178, 101, 186, 0.3);
+}
+
+.account-info-div, .friends-div, .trades-div {
+  height: 500px;
   margin-left: 20px;
   display: flex;
   flex-direction: column;

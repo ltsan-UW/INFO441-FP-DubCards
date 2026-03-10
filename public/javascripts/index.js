@@ -1,14 +1,14 @@
 // ===== MAIN IMPLEMENTATION NOTES: =====
 // The index.html contains a main content div. This div is where
-// all of DUBCARDS' content is displayed, while the navbar and  
-// sidebar remain constant for the most part. We use dom elements 
+// all of DUBCARDS' content is displayed, while the navbar and
+// sidebar remain constant for the most part. We use dom elements
 // to update what is displayed on the main content div utilizing
 // onClick() functions
 
 
 // ===== Initialization Function! =====
 // Runs load auth to check whether a user is logged in
-// before proceeding. 
+// before proceeding.
 async function init() {
     console.log("loading dubcards frontend...");
     await loadAuth()
@@ -17,7 +17,7 @@ async function init() {
 
 // ===== Loads sidebar =====
 // Loads the content of the sidebar, includes
-// a convenient function to make sidebar buttons on 
+// a convenient function to make sidebar buttons on
 // the dom
 async function loadSidebar() {
 
@@ -80,12 +80,9 @@ async function loadAccountPage() {
         const page = document.createElement("div");
         page.classList.add("accountPage");
 
-        const accountTitle = document.createElement("div");
-        accountTitle.classList.add("accountTitle");
         const title = document.createElement("h2");
-        title.textContent = "Your Account";
-        accountTitle.appendChild(title);
-        page.appendChild(accountTitle);
+        title.textContent = "Account";
+        page.appendChild(title);
 
         const accountInfoDiv = document.createElement("div");
         accountInfoDiv.classList.add("account-info-div")
@@ -429,6 +426,11 @@ async function loadFriends() {
     title.textContent = "Friends";
     page.appendChild(title);
 
+    // create div for section under title
+    const friendsDiv = document.createElement("div");
+    friendsDiv.classList.add("friends-div");
+    page.appendChild(friendsDiv);
+
     // send friend request section
     const requestSection = document.createElement("div");
     requestSection.classList.add("friends-section");
@@ -460,7 +462,7 @@ async function loadFriends() {
 
     const requestStatus = document.createElement("p");
     requestSection.appendChild(requestStatus);
-    page.appendChild(requestSection);
+    friendsDiv.appendChild(requestSection);
 
     // incoming friend requests section
     const friendsJson = await fetchJSON("api/user/friends");
@@ -510,7 +512,7 @@ async function loadFriends() {
             incomingSection.appendChild(row);
         });
     }
-    page.appendChild(incomingSection);
+    friendsDiv.appendChild(incomingSection);
 
     // current friends section
     const currentSection = document.createElement("div");
@@ -551,7 +553,7 @@ async function loadFriends() {
             currentSection.appendChild(row);
         });
     }
-    page.appendChild(currentSection);
+    friendsDiv.appendChild(currentSection);
 
     mainContent.appendChild(page);
 }
@@ -567,6 +569,9 @@ async function loadTrades() {
     const title = document.createElement("h2");
     title.textContent = "Trades";
     page.appendChild(title);
+    const tradesDiv = document.createElement("div");
+    tradesDiv.classList.add("trades-div");
+    page.appendChild(tradesDiv);
 
     const tradesJson = await fetchJSON("api/user/trades");
 
@@ -619,7 +624,7 @@ async function loadTrades() {
             incomingSection.appendChild(row);
         });
     }
-    page.appendChild(incomingSection);
+    tradesDiv.appendChild(incomingSection);
 
     // outgoing trades
     const outgoingSection = document.createElement("div");
@@ -658,7 +663,7 @@ async function loadTrades() {
             outgoingSection.appendChild(row);
         });
     }
-    page.appendChild(outgoingSection);
+    tradesDiv.appendChild(outgoingSection);
 
     mainContent.appendChild(page);
 }
