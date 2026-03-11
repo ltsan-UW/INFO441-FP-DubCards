@@ -21,7 +21,7 @@ export async function callback(req, res) {
                 username: username,
                 email: account.username,
                 password: "",
-                currency: 0,
+                currency:  500,
                 createdAt: Date.now(),
                 inventory: [],
                 favorites: [],
