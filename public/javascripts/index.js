@@ -429,6 +429,8 @@ async function loadFriends() {
     // create div for section under title
     const friendsDiv = document.createElement("div");
     friendsDiv.classList.add("friends-div");
+    const friendsOptionsDiv = document.createElement("div");
+    friendsOptionsDiv.classList.add("friends-options-div");
     page.appendChild(friendsDiv);
 
     // send friend request section
@@ -462,7 +464,7 @@ async function loadFriends() {
 
     const requestStatus = document.createElement("p");
     requestSection.appendChild(requestStatus);
-    friendsDiv.appendChild(requestSection);
+    friendsOptionsDiv.appendChild(requestSection);
 
     // incoming friend requests section
     const friendsJson = await fetchJSON("api/user/friends");
@@ -512,7 +514,8 @@ async function loadFriends() {
             incomingSection.appendChild(row);
         });
     }
-    friendsDiv.appendChild(incomingSection);
+    friendsOptionsDiv.appendChild(incomingSection);
+    friendsDiv.appendChild(friendsOptionsDiv);
 
     // current friends section
     const currentSection = document.createElement("div");

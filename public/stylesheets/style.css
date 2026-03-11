@@ -151,7 +151,7 @@ a {
   padding-left:20px;
   padding-right:20px;
   display:flex;
-  flex: 0 0 15%;
+  flex: 0 0 auto;
   text-align: left;
   border-radius: 50px;
   align-items:center;
@@ -175,7 +175,6 @@ a {
   display: flex;
   flex-direction: column;
   margin-left:20px;
-  overflow-y: auto;
   border-radius: 50px;
 
   padding: 25px;
@@ -598,14 +597,47 @@ a {
   border-radius: 20px;
 }
 
+.friends-div {
+  flex-direction: row;
+  align-items: start;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.friends-options-div .friends-section {
+  margin-bottom: 40px;
+}
+.friends-section {
+  text-align: center;
+}
+.friends-div > .friends-section:last-child {
+  margin: 0px 0px 0px 20px;
+  flex: 1 1 auto;
+}
+
 .friends-div button {
   margin-left: 10px;
+}
+.friend-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px
+}
+.friend-row > span{
+  margin-right: 20px;
+  margin-bottom: 5px;
+}
+.friend-row > button {
+  height: 20px;
 }
 
 .account-info-div div {
   margin: 5px
 }
-
+.trades-div {
+  justify-content: start;
+}
 .trades-section {
     display: flex;
     justify-content: start;
