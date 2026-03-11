@@ -44,8 +44,8 @@ export async function openPack(req, res) {
     }
 
     // get all cards in this pack
-    const availableCards = await CardModel.find({ packID: pack._id });
-    if (availableCards.length === 0) {
+    const cards = await CardModel.find({ cardID: { $in: pack.cards } });
+    if (pack.cards.length === 0 || cards.length === 0) {
       return res.status(404).json({ status: "error", error: "No cards found in this pack" });
     }
 
@@ -62,7 +62,7 @@ export async function openPack(req, res) {
           break;
         }
       }
-      const rarityCards = availableCards.filter(c => c.rarity === pickedRarity);
+      const rarityCards = cards.filter(c => c.rarity === pickedRarity);
       const card = rarityCards[Math.floor(Math.random() * rarityCards.length)];
       pickedCards.push(card);
     }
