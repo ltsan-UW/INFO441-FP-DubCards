@@ -610,6 +610,7 @@ a {
     display: flex;
     justify-content: start;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .trade-row {
@@ -668,6 +669,46 @@ a {
 }
 
 
+/*
+========================================
+            SEND TRADE PAGE
+========================================
+*/
+
+.trade-card-section {
+    width: 100%;
+}
+
+.sendtrade-cards, .sendtrade-smallcards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.card-sendtrade {
+  height: 100px;
+  width: 71.37px;
+  margin: 10px;
+}
+
+.sendtrade-smallcards {
+  padding: 5px;
+}
+
+.sendtrade-card-small {
+  height: 100px;
+  width: 71.37px;
+  margin: 5px;
+}
+
+.sendtrade-buttons-div {
+  display: flex;
+  flex-direction: row;
+}
+
+.sendtrade-buttons-div > button {
+  margin-left: 20px;
+}
 
 /*
 ========================================

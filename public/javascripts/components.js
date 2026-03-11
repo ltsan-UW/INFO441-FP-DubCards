@@ -1,4 +1,4 @@
-async function createCard(cardData, favorites, tilt = true, selectedCards) {
+async function createCard(cardData, favorites, tilt = true, selectedCards, targetClass) {
   const card = document.createElement("div");
   card.classList.add("card", `rarity_${cardData.rarity}`, `id_${cardData.cardID}`);
   card.setAttribute("data-tilt", "");
@@ -25,7 +25,7 @@ async function createCard(cardData, favorites, tilt = true, selectedCards) {
     favorite.classList.add("card-favorite");
     favorite.textContent = favorites.includes(cardData.cardID) ? "★" : "☆";
     card.appendChild(favorite);
-    favorite.addEventListener("click", async () => { handleFavoriteClick(favorites, cardData.cardID) });
+    favorite.addEventListener("click", async () => { handleFavoriteClick(favorites, cardData.cardID, favorite) });
   }
   if (tilt) {
     VanillaTilt.init(card, {
@@ -38,7 +38,9 @@ async function createCard(cardData, favorites, tilt = true, selectedCards) {
 
   card.addEventListener("click", () => {
     if (card.classList.contains("card-sell") && cardData?.quantity && cardData.quantity > 0) {
-      handleCardClick(cardData, card, cardQuantityDiv, selectedCards);
+      handleSellCardClick(cardData, card, cardQuantityDiv, selectedCards);
+    } else if (card.classList.contains("card-sendtrade") && cardData?.quantity && cardData.quantity > 0) {
+      handleTradeCardClick(cardData, card, cardQuantityDiv, selectedCards, targetClass);
     }
   });
 
@@ -47,13 +49,13 @@ async function createCard(cardData, favorites, tilt = true, selectedCards) {
 
 // Handles click for when the favorites star on a card is clicked
 // favorites: list of favorite cardIDs | cardID: card id of the clicked card
-async function handleFavoriteClick(favorites, cardID) {
+async function handleFavoriteClick(favorites, cardID, favoriteElement) {
   const isFav = favorites.includes(cardID);
   if (!isFav) {
-    favorite.textContent = "★";
+    favoriteElement.textContent = "★";
     favorites.push(cardID);
   } else {
-    favorite.textContent = "☆";
+    favoriteElement.textContent = "☆";
     const index = favorites.indexOf(cardID);
     if (index !== -1) favorites.splice(index, 1);
   }
@@ -68,7 +70,7 @@ async function handleFavoriteClick(favorites, cardID) {
 
 // Create a "smallCard" object, scale it to the big card and move it to .sellCards
 // On click, give back 1 quantity to big card and remove small card
-async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
+async function handleSellCardClick(cardData, card, cardQuantityDiv, selectedCards) {
   cardData.quantity--;
   if (selectedCards[cardData.cardID] !== undefined) {
     selectedCards[cardData.cardID]++;
@@ -101,11 +103,11 @@ async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
   smallCard.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(8deg)`;
 
 
-  smallCard.addEventListener("click", () => { handleSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv) });
+  smallCard.addEventListener("click", () => { handleSellSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv) });
 }
 
 // On click: move and scale back to big card, then remove small card and remove noquanitity class on card
-function handleSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv) {
+function handleSellSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv) {
   updateSellAmmount(false, cardData.rarity);
   if (selectedCards[cardData.cardID] === 1) {
     delete selectedCards[cardData.cardID];
@@ -129,6 +131,63 @@ function handleSmallCardClick(cardData, selectedCards, smallCard, card, cardQuan
         card.classList.remove("card-noquantity");
         card.querySelector(".card-sell-icon").classList.remove("hidden");
       }
+      cardQuantityDiv.textContent = `×${cardData.quantity}`;
+    }
+  }, { once: true });
+}
+
+// Create a "smallCard" object, scale it to the big card and move it to .send-trade-small-cards
+// On click, give back 1 quantity to big card and remove small card
+async function handleTradeCardClick(cardData, card, cardQuantityDiv, selectedCards, targetClass) {
+  cardData.quantity--;
+  selectedCards.push(cardData.cardID);
+
+  if (cardData.quantity === 0) card.classList.add("card-noquantity");
+  cardQuantityDiv.textContent = `×${cardData.quantity}`;
+
+  const smallCard = document.createElement("img");
+  smallCard.classList.add("sendtrade-card-small");
+  smallCard.style.zIndex = 1;
+  smallCard.src = card.querySelector("img").src;
+
+  const target = document.querySelector(targetClass);
+  target.appendChild(smallCard);
+  const first = card.querySelector("img").getBoundingClientRect();
+  const last = smallCard.getBoundingClientRect();
+  const dx = first.left - last.left + first.width / 2 - last.width / 2;
+  const dy = first.top - last.top + first.height / 2 - last.height / 2;
+  const scale = (first.width - 10) / last.width;
+  requestAnimationFrame(() => {
+    smallCard.style.transition = "transform 0.4s ease";
+    smallCard.style.transform = "";
+  });
+  smallCard.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(8deg)`;
+
+
+  smallCard.addEventListener("click", () => {
+    handleTradeSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv, targetClass)
+  });
+}
+
+// On click: move and scale back to big card, then remove small card and remove noquanitity class on card
+function handleTradeSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv) {
+  selectedCards.splice(arr.indexOf(cardData.cardID), 1);
+
+  smallCard.style.zIndex = 0; // Puts small card under big card
+  const first = card.querySelector("img").getBoundingClientRect();
+  const last = smallCard.getBoundingClientRect();
+  const dx = first.left - last.left + first.width / 2 - last.width / 2;
+  const dy = first.top - last.top + first.height / 2 - last.height / 2;
+  const scale = (first.width - 10) / last.width;
+  requestAnimationFrame(() => {
+    smallCard.style.transition = "transform 0.4s ease";
+    smallCard.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+  });
+  smallCard.addEventListener("transitionend", (e) => {
+    if (e.propertyName === "transform") {
+      smallCard.remove();
+      cardData.quantity++;
+      if (cardData.quantity > 0) card.classList.remove("card-noquantity");
       cardQuantityDiv.textContent = `×${cardData.quantity}`;
     }
   }, { once: true });

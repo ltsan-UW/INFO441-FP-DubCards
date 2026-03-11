@@ -668,34 +668,6 @@ async function loadSendTrade(receiverUsername) {
     sendTradeDiv.classList.add("sendTrade-div");
     page.appendChild(sendTradeDiv);
 
-    // helper to build a card row with a quantity input
-    function createCardRow(card, cardsMap) {
-        const row = document.createElement("div");
-        row.classList.add("trade-card-row");
-
-        const label = document.createElement("span");
-        label.textContent = `Card ${card.cardID} - ${card.name} (you have x${card.quantity})`;
-        row.appendChild(label);
-
-        const input = document.createElement("input");
-        input.type = "number";
-        input.min = 0;
-        input.max = card.quantity;
-        input.value = 0;
-        input.classList.add("trade-quantity-input");
-        input.oninput = () => {
-            // clamp value between 0 and max quantity
-            let val = parseInt(input.value) || 0;
-            if (val < 0) val = 0;
-            if (val > card.quantity) val = card.quantity;
-            input.value = val;
-            cardsMap[card.cardID] = val;
-        };
-        row.appendChild(input);
-
-        return row;
-    }
-
     // your cards
     const yourSection = document.createElement("div");
     yourSection.classList.add("trade-card-section");
@@ -704,10 +676,19 @@ async function loadSendTrade(receiverUsername) {
     yourTitle.textContent = "Your Cards (enter how many to offer)";
     yourSection.appendChild(yourTitle);
 
-    const senderCardsMap = {}; // { cardID: quantity }
-    userJson.inventory.forEach(card => {
-        senderCardsMap[card.cardID] = 0;
-        yourSection.appendChild(createCardRow(card, senderCardsMap));
+    let senderCardsDiv = document.createElement("div");
+    senderCardsDiv.classList.add("sendtrade-cards");
+    let senderSmallCardsDiv = document.createElement("div");
+    senderSmallCardsDiv.classList.add("sendtrade-smallcards");
+    senderSmallCardsDiv.classList.add("sendtrade-smallcards-sender");
+    yourSection.appendChild(senderCardsDiv);
+    yourSection.appendChild(senderSmallCardsDiv);
+
+    const senderCards = [];
+    userJson.inventory.forEach(async (card) => {
+        const cardElement = await createCard(card, null, true, senderCards, ".sendtrade-smallcards-sender");
+        cardElement.classList.add("card-sendtrade");
+        senderCardsDiv.appendChild(cardElement)
     });
     sendTradeDiv.appendChild(yourSection);
 
@@ -719,10 +700,19 @@ async function loadSendTrade(receiverUsername) {
     theirTitle.textContent = `${receiverUsername}'s Cards (enter how many to request)`;
     theirSection.appendChild(theirTitle);
 
-    const receiverCardsMap = {}; // { cardID: quantity }
-    receiverJson.inventory.forEach(card => {
-        receiverCardsMap[card.cardID] = 0;
-        theirSection.appendChild(createCardRow(card, receiverCardsMap));
+    const receiverCardsDiv = document.createElement("div");
+    receiverCardsDiv.classList.add("sendtrade-cards");
+    receiverSmallCardsDiv = document.createElement("div");
+    receiverSmallCardsDiv.classList.add("sendtrade-smallcards");
+    receiverSmallCardsDiv.classList.add("sendtrade-smallcards-receiver");
+    theirSection.appendChild(receiverCardsDiv);
+    theirSection.appendChild(receiverSmallCardsDiv);
+
+    const receiverCards = [];
+    receiverJson.inventory.forEach(async (card) => {
+        const cardElement = await createCard(card, null, true, receiverCards, ".sendtrade-smallcards-receiver");
+        cardElement.classList.add("card-sendtrade");
+        receiverCardsDiv.appendChild(cardElement)
     });
     sendTradeDiv.appendChild(theirSection);
 
@@ -732,13 +722,6 @@ async function loadSendTrade(receiverUsername) {
     const sendBtn = document.createElement("button");
     sendBtn.textContent = "Send Trade Request";
     sendBtn.onclick = async () => {
-        // convert maps to arrays of cardIDs, repeating for quantity
-        const senderCards = Object.entries(senderCardsMap)
-            .flatMap(([cardID, qty]) => Array(qty).fill(Number(cardID)));
-
-        const receiverCards = Object.entries(receiverCardsMap)
-            .flatMap(([cardID, qty]) => Array(qty).fill(Number(cardID)));
-
         if (senderCards.length === 0 && receiverCards.length === 0) {
             status.textContent = "Please select at least one card to trade.";
             return;
@@ -754,12 +737,15 @@ async function loadSendTrade(receiverUsername) {
             status.textContent = "Error sending trade.";
         }
     };
-    sendTradeDiv.appendChild(sendBtn);
 
+    const buttonsDiv = document.createElement("div");
+    buttonsDiv.classList.add("sendtrade-buttons-div")
     const backBtn = document.createElement("button");
     backBtn.textContent = "Back to Friends";
     backBtn.onclick = loadFriends;
-    sendTradeDiv.appendChild(backBtn);
+    buttonsDiv.appendChild(sendBtn);
+    buttonsDiv.appendChild(backBtn);
+    sendTradeDiv.appendChild(buttonsDiv);
 
     mainContent.appendChild(page);
 }
