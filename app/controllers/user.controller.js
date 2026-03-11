@@ -269,7 +269,7 @@ export async function postTrades(req, res) {
     await trade.save();
     res.json({ status: "success", trade });
   } catch (error) {
-    console.log(error) 
+    console.log(error)
     res.status(500).json({ status: "error", error });
   }
 }
@@ -356,7 +356,28 @@ export async function updateTrade(req, res) {
     await trade.save();
     res.json({ status: "success", trade });
   } catch (error) {
-    console.log(error) 
+    console.log(error)
+    res.status(500).json({ status: "error", error });
+  }
+}
+
+// DELETE /user/trade - delete a trade request
+export async function deleteTrade(req, res) {
+  try {
+    if (!req.authContext?.isAuthenticated()) {
+      return res.status(401).json({ status: "error", error: "Not logged in" });
+    }
+
+    console.log(req.params.tradeID)
+    const username = req.authContext.getAccount().username.split("@")[0];
+    const trade = await TradeModel.findOneAndDelete({
+                                _id: req.params.tradeID,
+                                $or: [ { receiverUsername: username }, { senderUsername: username } ]
+                              });
+    if (!trade) return res.status(404).json({ status: "error", error: "Trade not found" });
+    res.json({ status: "success", trade });
+  } catch (error) {
+    console.log(error)
     res.status(500).json({ status: "error", error });
   }
 }

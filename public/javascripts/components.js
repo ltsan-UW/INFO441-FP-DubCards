@@ -331,6 +331,19 @@ async function createTradeCard(trade) {
       loadTrades();
     };
     row.appendChild(cancelDiv);
+  } else if (trade.status === "cancelled" || trade.status === "accepted") {
+    const closeDiv = document.createElement("div");
+    const closeBtn = document.createElement("button");
+    closeDiv.classList.add("trade-close-div");
+    closeDiv.appendChild(closeBtn);
+    closeBtn.textContent = "Close";
+    closeBtn.onclick = async () => {
+      await fetchJSON(`api/user/trade/${trade._id}`, {
+        method: "DELETE"
+      });
+      loadTrades();
+    };
+    row.appendChild(closeDiv);
   }
 
   return row;

@@ -18,6 +18,9 @@ router.post('/trade', userController.postTrades);
 // PATCH /user/trade/:tradeID - Accept, reject, or cancel a trade
 router.patch('/trade/:tradeID', userController.updateTrade);
 
+// DELETE /user/trade/:tradeID - Delete a trade
+router.delete('/trade/:tradeID', userController.deleteTrade);
+
 // GET /user/friends - Get the logged in user's friends list
 router.get('/friends', userController.getFriends);
 
@@ -33,7 +36,7 @@ router.delete('/friends', userController.removeFriend);
 // GET /user/trades - View all incoming and outgoing trades
 router.get('/trades', userController.getTrades);
 
-// GET /user/:username - Allows users to see another user's information 
+// GET /user/:username - Allows users to see another user's information
 router.get('/:username', userController.getUserByUsername);
 
 export default router;
