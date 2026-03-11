@@ -588,39 +588,9 @@ async function loadTrades() {
         none.textContent = "No incoming trades.";
         incomingSection.appendChild(none);
     } else {
-        tradesJson.incoming.forEach(trade => {
-            const row = document.createElement("div");
+        tradesJson.incoming.forEach(async (trade) => {
+            const row = await createTradeCard(trade, true);
             row.classList.add("trade-row");
-
-            // const info = document.createElement("p");
-            // info.textContent = `From ${trade.senderUsername} — They offer cards: [${trade.senderCards.join(", ")}] for your cards: [${trade.receiverCards.join(", ")}] — Status: ${trade.status}`;
-            // row.appendChild(info);
-
-            if (trade.status === "pending") {
-                const acceptBtn = document.createElement("button");
-                acceptBtn.textContent = "Accept";
-                acceptBtn.onclick = async () => {
-                    await fetchJSON(`api/user/trade/${trade._id}`, {
-                        method: "PATCH",
-                        body: { status: "accepted" }
-                    });
-                    loadTrades();
-                };
-
-                const rejectBtn = document.createElement("button");
-                rejectBtn.textContent = "Reject";
-                rejectBtn.onclick = async () => {
-                    await fetchJSON(`api/user/trade/${trade._id}`, {
-                        method: "PATCH",
-                        body: { status: "rejected" }
-                    });
-                    loadTrades();
-                };
-
-                row.appendChild(acceptBtn);
-                row.appendChild(rejectBtn);
-            }
-
             incomingSection.appendChild(row);
         });
     }
@@ -640,7 +610,7 @@ async function loadTrades() {
         outgoingSection.appendChild(none);
     } else {
         tradesJson.outgoing.forEach(async (trade) => {
-            const row = await createTradeCard(trade);
+            const row = await createTradeCard(trade, false);
             outgoingSection.appendChild(row);
         });
     }

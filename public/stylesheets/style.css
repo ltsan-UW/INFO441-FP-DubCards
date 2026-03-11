@@ -613,6 +613,10 @@ a {
     flex-wrap: wrap;
 }
 
+.trades-section > p {
+    margin: auto;
+}
+
 .trade-row {
   background: rgba(56, 6, 61, 0.464);
   border-radius: 20px;
@@ -621,6 +625,10 @@ a {
   position: relative;
 }
 
+.trade-row > p {
+  margin: 10px 0px 10px 0px;
+  text-align: center;
+}
 .trade-row > p:first-child {
   margin: 0;
   text-align: center;
@@ -660,12 +668,15 @@ a {
   z-index: 1000;
 }
 
-.trade-cancel-div {
-  text-align: end;
-  margin-left: 10px;
+.trade-options-div {
+  text-align: center;
+  margin-top: 20px;
 }
-.trade-cancel-div button {
+
+.trade-options-div button {
   height: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 

@@ -171,7 +171,7 @@ async function handleTradeCardClick(cardData, card, cardQuantityDiv, selectedCar
 
 // On click: move and scale back to big card, then remove small card and remove noquanitity class on card
 function handleTradeSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv) {
-  selectedCards.splice(arr.indexOf(cardData.cardID), 1);
+  selectedCards.splice(selectedCards.indexOf(cardData.cardID), 1);
 
   smallCard.style.zIndex = 0; // Puts small card under big card
   const first = card.querySelector("img").getBoundingClientRect();
@@ -253,7 +253,7 @@ function createPack(packData, tilt = true) {
 }
 
 
-async function createTradeCard(trade) {
+async function createTradeCard(trade, incomingTrue) {
   console.log(trade)
 
   const row = document.createElement("div");
@@ -307,8 +307,12 @@ async function createTradeCard(trade) {
   const tradeGraphic = document.createElement("img");
   tradeGraphic.src = "images/graphics/dubcardsTrade.png";
   tradeGraphic.classList.add("trade-graphic");
-  infoOffer.textContent = `You offered: [${formatCardNames(senderNames)}] to ${trade.receiverUsername}.`;
-  infoRecieve.textContent = `For their cards: [${formatCardNames(receiverNames)}]`;
+  let offerText = (incomingTrue ? `You offered: [${formatCardNames(senderNames)}] to ${trade.receiverUsername}.`
+    : `You give: [${formatCardNames(receiverNames)}].`);
+  let receiveText = (incomingTrue ? `You receive: [${formatCardNames(receiverNames)}]`
+    : `You receive: [${formatCardNames(senderNames)}].`);
+  infoOffer.textContent = offerText;
+  infoRecieve.textContent = receiveText;
   infoStatus.textContent = `Status: ${trade.status}`;
   row.appendChild(infoStatus);
   row.appendChild(receiver);
@@ -317,10 +321,10 @@ async function createTradeCard(trade) {
   row.appendChild(infoOffer);
   row.appendChild(infoRecieve);
 
-  if (trade.status === "pending") {
+  if (!incomingTrue && trade.status === "pending") {
     const cancelDiv = document.createElement("div");
     const cancelBtn = document.createElement("button");
-    cancelDiv.classList.add("trade-cancel-div");
+    cancelDiv.classList.add("trade-options-div");
     cancelDiv.appendChild(cancelBtn);
     cancelBtn.textContent = "Cancel";
     cancelBtn.onclick = async () => {
@@ -331,10 +335,11 @@ async function createTradeCard(trade) {
       loadTrades();
     };
     row.appendChild(cancelDiv);
-  } else if (trade.status === "cancelled" || trade.status === "accepted") {
+  } else if (!incomingTrue && (trade.status === "cancelled" || trade.status === "accepted") ||
+             incomingTrue && (trade.status === "rejected" || trade.status === "accepted")) {
     const closeDiv = document.createElement("div");
     const closeBtn = document.createElement("button");
-    closeDiv.classList.add("trade-close-div");
+    closeDiv.classList.add("trade-options-div");
     closeDiv.appendChild(closeBtn);
     closeBtn.textContent = "Close";
     closeBtn.onclick = async () => {
@@ -344,6 +349,32 @@ async function createTradeCard(trade) {
       loadTrades();
     };
     row.appendChild(closeDiv);
+  } else if (incomingTrue && trade.status === "pending") {
+    const optionsDiv = document.createElement("div");
+    optionsDiv.classList.add("trade-options-div");
+    const acceptBtn = document.createElement("button");
+    acceptBtn.textContent = "Accept";
+    acceptBtn.onclick = async () => {
+      await fetchJSON(`api/user/trade/${trade._id}`, {
+        method: "PATCH",
+        body: { status: "accepted" }
+      });
+      loadTrades();
+    };
+
+    const rejectBtn = document.createElement("button");
+    rejectBtn.textContent = "Reject";
+    rejectBtn.onclick = async () => {
+      await fetchJSON(`api/user/trade/${trade._id}`, {
+        method: "PATCH",
+        body: { status: "rejected" }
+      });
+      loadTrades();
+    };
+
+    optionsDiv.appendChild(acceptBtn);
+    optionsDiv.appendChild(rejectBtn);
+    row.appendChild(optionsDiv);
   }
 
   return row;
