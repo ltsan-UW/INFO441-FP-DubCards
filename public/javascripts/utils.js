@@ -91,3 +91,13 @@ function setActiveButton(clickedButton) {
 
   clickedButton.classList.add("active");
 }
+
+// Returns a string of cards, given an object with card name : quantity format
+function formatCardNames(cards) {
+    let names = Object.keys(cards);
+    let newNames = [];
+    names.forEach((name) => {
+        newNames.push(((cards[name] > 1) ? cards[name] + " × " + name : name));
+    })
+    return newNames.join(", ")
+}

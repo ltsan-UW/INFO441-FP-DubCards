@@ -1,12 +1,3 @@
-
-// async function createCard(cardData){
-//     return `
-//     <div data-tilt data-tilt-scale="1.05" class="card rarity_${cardData.rarity}">
-//         <img src="../images/cards/${cardData.cardID}.png">
-//         <div class="card-quantities">×3<div/>
-//     </div> `
-// }
-
 async function createCard(cardData, favorites, tilt = true, selectedCards) {
   const card = document.createElement("div");
   card.classList.add("card", `rarity_${cardData.rarity}`, `id_${cardData.cardID}`);
@@ -34,7 +25,7 @@ async function createCard(cardData, favorites, tilt = true, selectedCards) {
     favorite.classList.add("card-favorite");
     favorite.textContent = favorites.includes(cardData.cardID) ? "★" : "☆";
     card.appendChild(favorite);
-    favorite.addEventListener("click", async () => {handleFavoriteClick(favorites, cardData.cardID)});
+    favorite.addEventListener("click", async () => { handleFavoriteClick(favorites, cardData.cardID) });
   }
   if (tilt) {
     VanillaTilt.init(card, {
@@ -57,23 +48,23 @@ async function createCard(cardData, favorites, tilt = true, selectedCards) {
 // Handles click for when the favorites star on a card is clicked
 // favorites: list of favorite cardIDs | cardID: card id of the clicked card
 async function handleFavoriteClick(favorites, cardID) {
-      const isFav = favorites.includes(cardID);
-      if (!isFav) {
-        favorite.textContent = "★";
-        favorites.push(cardID);
-      } else {
-        favorite.textContent = "☆";
-        const index = favorites.indexOf(cardID);
-        if (index !== -1) favorites.splice(index, 1);
-      }
+  const isFav = favorites.includes(cardID);
+  if (!isFav) {
+    favorite.textContent = "★";
+    favorites.push(cardID);
+  } else {
+    favorite.textContent = "☆";
+    const index = favorites.indexOf(cardID);
+    if (index !== -1) favorites.splice(index, 1);
+  }
 
-      try {
-        await fetchJSON(`api/user/favorites`, {
-          method: "POST",
-          body: { cardID: cardID, favorited: !isFav }
-        })
-      } catch (error) { console.log("Error connection to db", error) }
-    }
+  try {
+    await fetchJSON(`api/user/favorites`, {
+      method: "POST",
+      body: { cardID: cardID, favorited: !isFav }
+    })
+  } catch (error) { console.log("Error connection to db", error) }
+}
 
 // Create a "smallCard" object, scale it to the big card and move it to .sellCards
 // On click, give back 1 quantity to big card and remove small card
@@ -110,7 +101,7 @@ async function handleCardClick(cardData, card, cardQuantityDiv, selectedCards) {
   smallCard.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(8deg)`;
 
 
-  smallCard.addEventListener("click", () => {handleSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv)});
+  smallCard.addEventListener("click", () => { handleSmallCardClick(cardData, selectedCards, smallCard, card, cardQuantityDiv) });
 }
 
 // On click: move and scale back to big card, then remove small card and remove noquanitity class on card
@@ -200,4 +191,88 @@ function createPack(packData, tilt = true) {
   }
 
   return pack;
+}
+
+
+async function createTradeCard(trade) {
+  console.log(trade)
+
+  const row = document.createElement("div");
+  row.classList.add("trade-row");
+
+  const cardIDs = trade.senderCards.join(",") + "," + trade.receiverCards.join(",");
+
+  const cardsData = await fetchJSON("api/cards?cardIDs=" + cardIDs);
+
+  const receiver = document.createElement("div");
+  receiver.classList.add("trade-receiver");
+  const receiverUsername = document.createElement("p");
+  receiverUsername.textContent = trade.receiverUsername;
+  receiver.appendChild(receiverUsername);
+  const receiverCards = document.createElement("div");
+  receiverCards.classList.add("trade-cards");
+
+  const receiverNames = {};
+  trade["receiverCards"].forEach(async (cardID) => {
+    const cardData = cardsData.find(c => c.cardID === cardID);
+    receiverNames[cardData.name] = (receiverNames[cardData.name] || 0) + 1;
+    const cardElement = await createCard(cardData, null, tilt = true);
+    cardElement.classList.add("card-trade")
+    receiverCards.appendChild(cardElement);
+  })
+  receiver.appendChild(receiverCards);
+
+  const sender = document.createElement("div");
+  sender.classList.add("trade-sender");
+  const senderUsername = document.createElement("p");
+  senderUsername.textContent = trade.senderUsername;
+  sender.appendChild(senderUsername);
+
+  const senderCards = document.createElement("div");
+  senderCards.classList.add("trade-cards");
+
+  const senderNames = {};
+  trade["senderCards"].forEach(async (cardID) => {
+    const cardData = cardsData.find(c => c.cardID === cardID);
+    senderNames[cardData.name] = (senderNames[cardData.name] || 0) + 1;
+    const cardElement = await createCard(cardData, null, tilt = true);
+    cardElement.classList.add("card-trade");
+    senderCards.appendChild(cardElement);
+  });
+
+  sender.appendChild(senderCards);
+
+  const infoOffer = document.createElement("p");
+  const infoRecieve = document.createElement("p");
+  const infoStatus = document.createElement("p");
+  const tradeGraphic = document.createElement("img");
+  tradeGraphic.src = "images/graphics/dubcardsTrade.png";
+  tradeGraphic.classList.add("trade-graphic");
+  infoOffer.textContent = `You offered: [${formatCardNames(senderNames)}] to ${trade.receiverUsername}.`;
+  infoRecieve.textContent = `For their cards: [${formatCardNames(receiverNames)}]`;
+  infoStatus.textContent = `Status: ${trade.status}`;
+  row.appendChild(infoStatus);
+  row.appendChild(receiver);
+  row.appendChild(tradeGraphic);
+  row.appendChild(sender);
+  row.appendChild(infoOffer);
+  row.appendChild(infoRecieve);
+
+  if (trade.status === "pending") {
+    const cancelDiv = document.createElement("div");
+    const cancelBtn = document.createElement("button");
+    cancelDiv.classList.add("trade-cancel-div");
+    cancelDiv.appendChild(cancelBtn);
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.onclick = async () => {
+      await fetchJSON(`api/user/trade/${trade._id}`, {
+        method: "PATCH",
+        body: { status: "cancelled" }
+      });
+      loadTrades();
+    };
+    row.appendChild(cancelDiv);
+  }
+
+  return row;
 }

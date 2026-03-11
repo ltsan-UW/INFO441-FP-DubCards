@@ -581,7 +581,7 @@ async function loadTrades() {
 
     const incomingTitle = document.createElement("h3");
     incomingTitle.textContent = "Incoming Trade Requests";
-    incomingSection.appendChild(incomingTitle);
+    tradesDiv.appendChild(incomingTitle);
 
     if (tradesJson.incoming.length === 0) {
         const none = document.createElement("p");
@@ -592,9 +592,9 @@ async function loadTrades() {
             const row = document.createElement("div");
             row.classList.add("trade-row");
 
-            const info = document.createElement("p");
-            info.textContent = `From ${trade.senderUsername} — They offer cards: [${trade.senderCards.join(", ")}] for your cards: [${trade.receiverCards.join(", ")}] — Status: ${trade.status}`;
-            row.appendChild(info);
+            // const info = document.createElement("p");
+            // info.textContent = `From ${trade.senderUsername} — They offer cards: [${trade.senderCards.join(", ")}] for your cards: [${trade.receiverCards.join(", ")}] — Status: ${trade.status}`;
+            // row.appendChild(info);
 
             if (trade.status === "pending") {
                 const acceptBtn = document.createElement("button");
@@ -632,34 +632,15 @@ async function loadTrades() {
 
     const outgoingTitle = document.createElement("h3");
     outgoingTitle.textContent = "Outgoing Trade Requests";
-    outgoingSection.appendChild(outgoingTitle);
+    tradesDiv.appendChild(outgoingTitle);
 
     if (tradesJson.outgoing.length === 0) {
         const none = document.createElement("p");
         none.textContent = "No outgoing trades.";
         outgoingSection.appendChild(none);
     } else {
-        tradesJson.outgoing.forEach(trade => {
-            const row = document.createElement("div");
-            row.classList.add("trade-row");
-
-            const info = document.createElement("p");
-            info.textContent = `To ${trade.receiverUsername} — You offered: [${trade.senderCards.join(", ")}] for their cards: [${trade.receiverCards.join(", ")}] — Status: ${trade.status}`;
-            row.appendChild(info);
-
-            if (trade.status === "pending") {
-                const cancelBtn = document.createElement("button");
-                cancelBtn.textContent = "Cancel";
-                cancelBtn.onclick = async () => {
-                    await fetchJSON(`api/user/trade/${trade._id}`, {
-                        method: "PATCH",
-                        body: { status: "cancelled" }
-                    });
-                    loadTrades();
-                };
-                row.appendChild(cancelBtn);
-            }
-
+        tradesJson.outgoing.forEach(async (trade) => {
+            const row = await createTradeCard(trade);
             outgoingSection.appendChild(row);
         });
     }
@@ -682,6 +663,10 @@ async function loadSendTrade(receiverUsername) {
     const title = document.createElement("h2");
     title.textContent = `Send Trade to ${receiverUsername}`;
     page.appendChild(title);
+
+    const sendTradeDiv = document.createElement("div");
+    sendTradeDiv.classList.add("sendTrade-div");
+    page.appendChild(sendTradeDiv);
 
     // helper to build a card row with a quantity input
     function createCardRow(card, cardsMap) {
@@ -724,7 +709,7 @@ async function loadSendTrade(receiverUsername) {
         senderCardsMap[card.cardID] = 0;
         yourSection.appendChild(createCardRow(card, senderCardsMap));
     });
-    page.appendChild(yourSection);
+    sendTradeDiv.appendChild(yourSection);
 
     // their cards
     const theirSection = document.createElement("div");
@@ -739,10 +724,10 @@ async function loadSendTrade(receiverUsername) {
         receiverCardsMap[card.cardID] = 0;
         theirSection.appendChild(createCardRow(card, receiverCardsMap));
     });
-    page.appendChild(theirSection);
+    sendTradeDiv.appendChild(theirSection);
 
     const status = document.createElement("p");
-    page.appendChild(status);
+    sendTradeDiv.appendChild(status);
 
     const sendBtn = document.createElement("button");
     sendBtn.textContent = "Send Trade Request";
@@ -769,12 +754,12 @@ async function loadSendTrade(receiverUsername) {
             status.textContent = "Error sending trade.";
         }
     };
-    page.appendChild(sendBtn);
+    sendTradeDiv.appendChild(sendBtn);
 
     const backBtn = document.createElement("button");
     backBtn.textContent = "Back to Friends";
     backBtn.onclick = loadFriends;
-    page.appendChild(backBtn);
+    sendTradeDiv.appendChild(backBtn);
 
     mainContent.appendChild(page);
 }

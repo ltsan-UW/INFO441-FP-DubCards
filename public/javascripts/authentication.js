@@ -10,7 +10,7 @@ async function loadAuth() {
     if (identityInfo.status == "loggedin") {
       user = identityInfo.userInfo;
       identity_div.innerHTML = `
-            <h2>Logged in as: ${user.name}<h2/>
+            <h2>Logged in as: ${user.username.split("@")[0]}<h2/>
             <a href="/auth/signout" role="button" class="account-buttons">Logout</a>`;
       loadSidebar();
       loadInventory();

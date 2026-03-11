@@ -5,6 +5,7 @@ export async function getCards(req, res) {
   try {
     const filter = {};
     if (req.query.cardID) filter.cardID = req.query.cardID;
+    if (req.query.cardIDs) filter.cardID = { $in: req.query.cardIDs.split(",")};
     if (req.query.packID) filter.packID = req.query.packID;
     const cards = await CardModel.find(filter);
     res.json(cards);
