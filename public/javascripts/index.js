@@ -190,7 +190,7 @@ async function loadPack(packID) {
         let currency = userJSON.currency;
         let packPrice = packJSON.price;
 
-        if (currency > packPrice) {
+        if (currency >= packPrice) {
             button.textContent = "BUY";
             button.onclick = () => openPack(packID, packJSON.name);
             button.setAttribute("data-tilt", "");
