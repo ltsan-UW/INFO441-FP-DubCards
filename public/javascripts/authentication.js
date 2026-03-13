@@ -20,8 +20,10 @@ async function loadAuth() {
           <a href="/auth/signin" role="button" class="account-buttons">Login with Microsoft</a>`;
       const mainContent = document.getElementById("mainContent");
       const notLoggedInDiv = document.createElement("div");
+      const notLoggedInH1 = document.createElement("h2");
+      notLoggedInH1.innerText = "Please log in to use DubCards.";
       notLoggedInDiv.classList.add("not-logged-in-div")
-      notLoggedInDiv.innerText = "Please log in to use DubCards."
+      notLoggedInDiv.appendChild(notLoggedInH1);
       mainContent.appendChild(notLoggedInDiv);
     }
   } catch (error) {
