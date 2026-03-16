@@ -43,21 +43,29 @@ Imagine sitting in a lecture some day, and your friend nearby pulls a ultra rare
 
 ### Endpoints
 
-GET /auth/signin \- Allows users to log into their account.
-GET /auth/signout \- Allows users to log out of their account.
-POST /auth/register \- Allows users to create a new account.
+GET /auth/signin - Allows users to log into their account.  
+GET /auth/signout - Allows users to log out of their account.  
+GET /auth/callback - Auth callback used after authentication to complete login.  
+GET /auth/user - Returns information about the currently authenticated user.  
 
+GET /user - Allows the logged-in user to view their own information, including cards, trades, favorites, and friends.  
+GET /user/:username - Allows users to view another user's public information.  
+POST /user/sell - Allows users to sell cards they currently own.  
+POST /user/favorites - Allows users to add cards to their favorites list.  
+POST /user/trade - Allows users to send a trade request to another user.  
+PATCH /user/trade/:tradeID - Allows users to accept, reject, or cancel a trade request.  
+DELETE /user/trade/:tradeID - Deletes a trade request.  
+GET /user/trades - Returns all incoming and outgoing trades for the logged-in user.  
+GET /user/friends - Returns the logged-in user's friends list.  
+POST /user/friends/request - Sends a friend request to another user.  
+PATCH /user/friends/request - Accepts or rejects a friend request.  
+DELETE /user/friends - Removes a user from the logged-in user's friends list.  
 
-GET /user/:id \- Allows users to see their information; what cards they have, their trade requests and their favorites list.
-POST /user/:id/cards \- Allows users to sell cards that they have.
-POST /user/:id/favorites \- Allows users to add cards to their favorites list.
-POST /user/trade \- Allows users to send or edit trade requests to another user.
+GET /store/packs - Allows users to see all available card packs.  
+GET /store/packs/:packID - Allows users to view details about a specific pack.  
+POST /store/packs/:packID - Allows users to open a pack using their in-game currency and add the obtained cards to their collection.  
 
-GET /store/packs/ \- Allows users to see all the available packs.
-GET /store/packs/:packID \- Allows users see details on a specific pack.
-POST /store/packs/:packID \- Allows users to open a specific pack and add obtained cards to their user in the db, using their currency.
-
-GET /cards/ \- Allows users to see cards; query filtered on set and/or cardID.
+GET /cards - Allows users to view cards in the database, with optional query filtering by set and/or cardID.
 
 ### Database Schema
 
