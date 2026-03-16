@@ -1,7 +1,7 @@
 let user = undefined;
 
 async function loadAuth() {
-  console.log("loading authentication")
+  //console.log("loading authentication")
   let identity_div = document.getElementById("login-signup-div");
 
   try {

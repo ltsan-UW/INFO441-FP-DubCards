@@ -27,7 +27,7 @@ export async function callback(req, res) {
                 favorites: [],
             });
             await user.save();
-            console.log(`Created new user: ${username}`);
+            //console.log(`Created new user: ${username}`);
         }
         res.redirect("/")
     } catch (error) {

@@ -111,7 +111,7 @@ async function loadAccountPage() {
 
         mainContent.appendChild(page);
     } catch (err) {
-        throw error;
+        throw err;
     }
 }
 
@@ -317,8 +317,7 @@ async function openPack(packID, packName) {
 async function loadInventory() {
     const userInfoJson = await fetchJSON(`api/user/`);
 
-    console.log("Loading inventory...");
-    console.log(userInfoJson)
+    //console.log("Loading inventory...");
 
     const inventory = document.createElement("div");
     inventory.classList.add("inventory");
@@ -378,6 +377,7 @@ async function loadInventory() {
                 }
             });
             updateSellAmmount(null, null, true);
+            Object.keys(selectedCards).forEach(cardID => delete selectedCards[cardID]);
         }
     }
 

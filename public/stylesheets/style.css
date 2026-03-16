@@ -759,6 +759,15 @@ a {
 ========================================
 */
 
+#error-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: larger;
+  font-weight: bold;
+  color: white;
+}
+
 .hidden {
   display: none;
 }
