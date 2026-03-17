@@ -47,6 +47,56 @@ async function createCard(cardData, favorites, tilt = true, selectedCards, targe
   return card;
 }
 
+async function createRevealCard(cardData) {
+  const cardWrapper = document.createElement("div");
+  cardWrapper.classList.add("reveal-card");
+  cardWrapper.dataset.rarity = cardData.rarity.toLowerCase();
+  cardWrapper.dataset.revealed = "false";
+
+  const inner = document.createElement("div");
+  inner.classList.add("reveal-card-inner");
+
+  const back = document.createElement("div");
+  back.classList.add("reveal-card-back");
+
+  const backImg = document.createElement("img");
+  backImg.src = `../images/cards/backcard.png`;
+  backImg.alt = "DubCard";
+  backImg.classList.add("reveal-card-back-image");
+
+  backImg.onerror = () => {
+    backImg.onerror = null;
+    backImg.src = "../images/cards/temp.png";
+  };
+
+  back.appendChild(backImg);
+
+
+  const front = document.createElement("div");
+  front.classList.add("reveal-card-front");
+
+  inner.appendChild(back);
+  inner.appendChild(front);
+  cardWrapper.appendChild(inner);
+
+  cardWrapper.addEventListener("click", async () => {
+    if (cardWrapper.dataset.revealed === "true") return;
+
+    cardWrapper.dataset.revealed = "true";
+
+    const revealedCard = await createCard(cardData);
+    revealedCard.classList.add("opened-card");
+
+    front.appendChild(revealedCard);
+
+    requestAnimationFrame(() => {
+      cardWrapper.classList.add("revealed");
+    })
+  });
+
+  return cardWrapper;
+}
+
 // Handles click for when the favorites star on a card is clicked
 // favorites: list of favorite cardIDs | cardID: card id of the clicked card
 async function handleFavoriteClick(favorites, cardID, favoriteElement) {

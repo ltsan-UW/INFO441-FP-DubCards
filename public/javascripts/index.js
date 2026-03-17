@@ -303,7 +303,7 @@ async function openPack(packID, packName) {
         });
 
         const cards = await Promise.all(
-            cardsArray.map(card => createCard(card))
+            cardsArray.map(card => createRevealCard(card))
         );
 
         cards.forEach(card => openPackDiv.appendChild(card));
