@@ -84,14 +84,18 @@ async function createRevealCard(cardData) {
 
     cardWrapper.dataset.revealed = "true";
 
-    const revealedCard = await createCard(cardData);
-    revealedCard.classList.add("opened-card");
+    try {
+      const revealedCard = await createCard(cardData);
+      revealedCard.classList.add("opened-card");
 
-    front.appendChild(revealedCard);
+      front.appendChild(revealedCard);
 
-    requestAnimationFrame(() => {
-      cardWrapper.classList.add("revealed");
-    })
+      requestAnimationFrame(() => {
+        cardWrapper.classList.add("revealed");
+      })
+    } catch (err) {
+      console.error("Failed to reveal card:", err);
+    }
   });
 
   return cardWrapper;
