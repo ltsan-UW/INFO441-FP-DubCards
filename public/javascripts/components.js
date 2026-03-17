@@ -304,8 +304,6 @@ function createPack(packData, tilt = true) {
 
 
 async function createTradeCard(trade, incomingTrue) {
-  console.log(trade)
-
   const row = document.createElement("div");
   row.classList.add("trade-row");
 

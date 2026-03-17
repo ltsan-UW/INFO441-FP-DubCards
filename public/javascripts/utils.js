@@ -34,12 +34,13 @@ async function fetchJSON(route, options) {
 }
 
 async function displayError() {
-    document.getElementById('errorInfo').innerText = 'Error: action failed (see console for more information)'
-    document.getElementById('errorInfo').style.opacity = 1
-    // pause 4 seconds
-    await new Promise(resolve => setTimeout(resolve, 4 * 1000))
-    document.getElementById('errorInfo').innerText = ''
-    document.getElementById('errorInfo').style.opacity = 0
+    const mainContent = document.getElementById("mainContent");
+    mainContent.innerHTML = "";
+    const errorDiv = document.createElement('div');
+    errorDiv.id = 'error-div';
+    errorDiv.innerText = 'Error: action failed (see console for more information)';
+    errorDiv.style.opacity = 1
+    mainContent.appendChild(errorDiv);
 }
 
 

@@ -69,36 +69,58 @@ GET /cards - Allows users to view cards in the database, with optional query fil
 
 ### Database Schema
 
-* Users:
-  * userID: number
+* User:
+  * _id: ObjectId
   * username: String
   * email: String
+  * password: String
+  * currency: Number
   * createdAt: Date
-  * Inventory:
-    * cardID:number
-    * Quantitynumber
-  * Favories:
-    * cardID:number
-* Card
-  * cardID: number
+  * inventory: List
+    * name: String
+    * cardID: Number
+    * rarity: String (Common | Uncommon | Rare | Ultra-Rare | Legendary)
+    * quantity: Number
+  * favorites: List
+    * cardID: Number
+  * friends: List
+    * username: String
+  * friendRequests: List
+    * username: String
+
+* Card:
+  * _id: ObjectId
+  * cardID: Number
   * name: String
   * description: String
-  * rarity: String
-  * cardType: String
-  * setID: number
-  * setName: String
+  * rarity: String (Common | Uncommon | Rare | Ultra-Rare | Legendary)
+  * packID: ObjectId
+  * packName: String
+
 * Pack:
-  * packID: ObjectId,
+  * _id: ObjectId
   * name: String
   * description: String
   * price: Number
-  * setID: number
-  * setName: String
-* Trade
-  * tradeID: number
-  * senderUserId: number
-  * receiverUserId: number
-  * senderCards
-  * receiverCards
+  * cards: List
+    * cardID: Number
+  * rarities: Map
+    * Common: Number
+    * Uncommon: Number
+    * Rare: Number
+    * Ultra-Rare: Number
+    * Legendary: Number
+
+* Trade:
+  * _id: ObjectId
+  * senderUsername: String
+  * receiverUsername: String
+  * senderCards: List
+    * cardID: Number
+  * receiverCards: List
+    * cardID: Number
+  * status: String (pending | accepted | rejected | cancelled)
+  * createdAt: Date
+  * updatedAt: Date
 
 
